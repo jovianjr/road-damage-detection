@@ -11,6 +11,8 @@ import {
   Trash,
 } from "lucide-react";
 
+import IconComponent from "../components/IconComponents";
+
 export default function DaftarRekaman() {
   const dummyData = [
     {
@@ -109,6 +111,13 @@ export default function DaftarRekaman() {
     },
   ];
 
+  const icons = [
+    { icon: <TableProperties />, name: "Lihat Tabel" },
+    { icon: <Map />, name: "Lihat Peta" },
+    { icon: <Pencil />, name: "Edit" },
+    { icon: <Trash />, name: "Hapus" },
+  ];
+
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-[#fff] text-black">
       <table className="w-3/4 text-lg md:text-2xl bg-white font-medium">
@@ -174,18 +183,15 @@ export default function DaftarRekaman() {
                 </td>
                 <td className="text-center py-2 md:py-4 px-3">
                   <div className="grid grid-cols-4 w-full">
-                    <div className="flex items-center justify-center">
-                      <TableProperties />
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <Map />
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <Pencil />
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <Trash />
-                    </div>
+                    {icons.map((item, index) => {
+                      return (
+                        <IconComponent
+                          icon={item.icon}
+                          name={item.name}
+                          key={index}
+                        />
+                      );
+                    })}
                   </div>
                 </td>
               </tr>
