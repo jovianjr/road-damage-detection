@@ -3,6 +3,7 @@ node_modules/*
 package-lock.json
 yarn-lock.json
 .env
+.vscode
 .next/package.json
 bun.lockb
 yarn-error.log

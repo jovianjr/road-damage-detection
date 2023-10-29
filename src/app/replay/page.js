@@ -1,268 +1,389 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
+import { useState, useRef, useEffect } from 'react'
 import {
-  Calendar,
-  AlignLeft,
-  AlertOctagon,
-  PlaySquare,
-  List,
-  TableProperties,
-  Map,
-  Pencil,
-  Trash,
-} from "lucide-react";
+	AlignLeft,
+	AlertOctagon,
+	PlaySquare,
+	List,
+	TableProperties,
+	Map,
+	Pencil,
+	Trash,
+	Clock,
+	Eye,
+} from 'lucide-react'
 
-import IconComponent from "../components/IconComponents";
+import FramePopup from '@/app/replay/_framePopup'
+import IconComponent from '@/app/components/IconComponents'
+import clsx from 'clsx'
+
+const dummyData = [
+	{
+		id: 1,
+		duration: '34',
+		title: 'Jl Gamping',
+		totalKerusakan: 13,
+		videoData: [
+			{
+				id: 1,
+				text: 'Video',
+			},
+			{
+				id: 2,
+				text: 'Lokasi',
+			},
+		],
+		prediction: [
+			{
+				xMin: 0.6484375,
+				yMin: 0.3375,
+				xMax: 0.7203125,
+				yMax: 0.371875,
+				confidence: 0.5252203941345215,
+				class: 'pothole',
+				classId: 0,
+			},
+			{
+				xMin: 0.3,
+				yMin: 0.3,
+				xMax: 0.6,
+				yMax: 0.6,
+				confidence: 0.8,
+				class: 'large-rectangle',
+				classId: 1,
+			},
+			{
+				xMin: 0.1,
+				yMin: 0.1,
+				xMax: 0.4,
+				yMax: 0.4,
+				confidence: 0.7,
+				class: 'large-rectangle',
+				classId: 1,
+			},
+		],
+	},
+	{
+		id: 2,
+		duration: '57',
+		title: 'Maguwoharjo',
+		totalKerusakan: 7,
+		videoData: [
+			{
+				id: 1,
+				text: 'Video',
+			},
+		],
+		prediction: [
+			{
+				xMin: 0.6484389,
+				yMin: 0.3356,
+				xMax: 0.7203195,
+				yMax: 0.371876,
+				confidence: 0.5252203941345215,
+				class: 'pothole',
+				classId: 0,
+			},
+		],
+	},
+	{
+		id: 3,
+		duration: '87',
+		title: 'Parangkritis',
+		totalKerusakan: 32,
+		videoData: [
+			{
+				id: 1,
+				text: 'Video',
+			},
+			{
+				id: 2,
+				text: 'Lokasi',
+			},
+		],
+		prediction: [
+			{
+				xMin: 0.1,
+				yMin: 0.1,
+				xMax: 0.4,
+				yMax: 0.4,
+				confidence: 0.7,
+				class: 'large-rectangle',
+				classId: 1,
+			},
+		],
+	},
+	{
+		id: 4,
+		duration: '90',
+		title: 'Jl Pramuka',
+		totalKerusakan: 6,
+		videoData: [
+			{
+				id: 1,
+				text: 'Video',
+			},
+		],
+		prediction: [
+			{
+				xMin: 0.2,
+				yMin: 0.2,
+				xMax: 0.5,
+				yMax: 0.5,
+				confidence: 0.6,
+				class: 'medium-rectangle',
+				classId: 2,
+			},
+		],
+	},
+	{
+		id: 5,
+		duration: '111',
+		title: 'Jl Monjali',
+		totalKerusakan: 2,
+		videoData: [
+			{
+				id: 1,
+				text: 'Video',
+			},
+		],
+		prediction: [
+			{
+				xMin: 0.3,
+				yMin: 0.3,
+				xMax: 0.6,
+				yMax: 0.6,
+				confidence: 0.8,
+				class: 'large-rectangle',
+				classId: 1,
+			},
+		],
+	},
+	{
+		id: 6,
+		duration: '134',
+		title: 'Kauman',
+		totalKerusakan: 19,
+		videoData: [
+			{
+				id: 1,
+				text: 'Video',
+			},
+			{ id: 2, text: 'Lokasi' },
+		],
+		prediction: [
+			{
+				xMin: 0.2,
+				yMin: 0.3,
+				xMax: 0.7,
+				yMax: 0.7,
+				confidence: 0.75,
+				class: 'medium-rectangle',
+				classId: 2,
+			},
+		],
+	},
+	{
+		id: 7,
+		duration: '156',
+		title: 'Babarsari',
+		totalKerusakan: 5,
+		videoData: [
+			{
+				id: 1,
+				text: 'Video',
+			},
+			{ id: 2, text: 'Lokasi' },
+		],
+		prediction: [
+			{
+				xMin: 0.05,
+				yMin: 0.05,
+				xMax: 0.45,
+				yMax: 0.45,
+				confidence: 0.85,
+				class: 'large-rectangle',
+				classId: 1,
+			},
+		],
+	},
+]
+
+const icons = [
+	{ id: 1, icon: <TableProperties />, name: 'Lihat Tabel' },
+	{ id: 2, icon: <Map />, name: 'Lihat Peta' },
+	{ id: 3, icon: <Pencil />, name: 'Edit' },
+	{ id: 4, icon: <Trash />, name: 'Hapus' },
+]
+
+const headerTableContent = [
+	{ id: 1, icon: <Clock />, name: 'Durasi Video' },
+	{ id: 2, icon: <AlignLeft />, name: 'Longitude' },
+	{ id: 3, icon: <AlignLeft />, name: 'Latitude' },
+	{ id: 4, icon: <AlertOctagon />, name: 'Total Kerusakan' },
+	{ id: 5, icon: <PlaySquare />, name: 'Data Video' },
+	{ id: 6, icon: <List />, name: 'Detail' },
+]
 
 export default function Replay() {
-  const dummyData = [
-    {
-      id: 1,
-      date: "08/10/2023",
-      title: "Jl Gamping",
-      totalKerusakan: 13,
-      videoData: [
-        {
-          id: 1,
-          text: "Video",
-        },
-        {
-          id: 2,
-          text: "Lokasi",
-        },
-      ],
-    },
-    {
-      id: 2,
-      date: "02/10/2023",
-      title: "Maguwoharjo",
-      totalKerusakan: 7,
-      videoData: [
-        {
-          id: 1,
-          text: "Video",
-        },
-      ],
-    },
-    {
-      id: 3,
-      date: "12/09/2023",
-      title: "Parangkritis",
-      totalKerusakan: 32,
-      videoData: [
-        {
-          id: 1,
-          text: "Video",
-        },
-        {
-          id: 2,
-          text: "Lokasi",
-        },
-      ],
-    },
-    {
-      id: 4,
-      date: "23/07/2023",
-      title: "Jl Pramuka",
-      totalKerusakan: 6,
-      videoData: [
-        {
-          id: 1,
-          text: "Video",
-        },
-      ],
-    },
-    {
-      id: 5,
-      date: "31/02/2022",
-      title: "Jl Monjali",
-      totalKerusakan: 2,
-      videoData: [
-        {
-          id: 1,
-          text: "Video",
-        },
-      ],
-    },
-    {
-      id: 6,
-      date: "17/02/2022",
-      title: "Kauman",
-      totalKerusakan: 19,
-      videoData: [
-        {
-          id: 1,
-          text: "Video",
-        },
-        { id: 2, text: "Lokasi" },
-      ],
-    },
-    {
-      id: 7,
-      date: "05/01/2022",
-      title: "Babarsari",
-      totalKerusakan: 5,
-      videoData: [
-        {
-          id: 1,
-          text: "Video",
-        },
-        { id: 2, text: "Lokasi" },
-      ],
-    },
-  ];
+	const videoFile = 'example-video.mp4'
+	const vidRef = useRef(null)
+	const [frameDataUrl, setFrameDataUrl] = useState(null)
 
-  const [isSaved, setIsSaved] = useState(false);
+	const handleSeeFrameClick = (duration, prediction) => {
+		if (vidRef.current) {
+			vidRef.current.currentTime = duration
+			vidRef.current.isclick = true
+			vidRef.current.activePrediction = prediction
+		}
+	}
 
-  const saveVideo = () => {
-    setIsSaved(true);
-  };
+	useEffect(() => {
+		const handleSeeked = () => {
+			if (vidRef.current.isclick) {
+				const canvas = document.createElement('canvas')
+				const context = canvas.getContext('2d')
 
-  const icons = [
-    { icon: <TableProperties />, name: "Lihat Tabel" },
-    { icon: <Map />, name: "Lihat Peta" },
-    { icon: <Pencil />, name: "Edit" },
-    { icon: <Trash />, name: "Hapus" },
-  ];
+				canvas.width = vidRef.current.videoWidth
+				canvas.height = vidRef.current.videoHeight
 
-  return (
-    <div className="w-full min-h-screen bg-[#fff] text-black text-2xl pt-24">
-      <div className="w-[831px] container mx-auto">
-        <div className="rounded-2xl bg-[#FDC403] w-full h-[519px]"></div>
-        <div className="flex items-center w-full mt-12 gap-5">
-          {isSaved ? (
-            <>
-              <div className="w-full px-6 py-3">video1.mp4</div>
-              <div className="w-1/2 grid grid-cols-4">
-                <div className="flex items-center justify-center">
-                  <TableProperties />
-                </div>
-                <div className="flex items-center justify-center">
-                  <Map />
-                </div>
-                <div className="flex items-center justify-center">
-                  <Pencil />
-                </div>
-                <div className="flex items-center justify-center">
-                  <Trash />
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="w-full border border-slate-300 rounded-full px-6 py-3">
-                video1
-              </div>
-              <div
-                className="w-1/8 py-1 px-4 border border-[#FDC403] text-[#292E66] rounded-full cursor-pointer"
-                onClick={saveVideo}
-              >
-                Simpan
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+				context.drawImage(vidRef.current, 0, 0, canvas.width, canvas.height)
 
-      {isSaved ? (
-        <>
-          <div className="container mx-auto py-16">
-            <table className="w-full text-lg md:text-2xl bg-white font-medium">
-              <thead className="">
-                <tr>
-                  <td className="border-b border-r py-2 md:py-4 text-center">
-                    <div className="flex items-center justify-center gap-4">
-                      <Calendar />
-                      <p>Tanggal</p>
-                    </div>
-                  </td>
-                  <td className="border-b border-r px-3 py-2 md:py-4 text-center">
-                    <div className="flex items-center justify-center gap-4">
-                      <AlignLeft />
-                      <p>Longitude</p>
-                    </div>
-                  </td>
-                  <td className="border-b border-r px-3 py-2 md:py-4 text-center">
-                    <div className="flex items-center justify-center gap-4">
-                      <AlignLeft />
-                      <p>Latitude</p>
-                    </div>
-                  </td>
-                  <td className="border-b border-r px-3 py-2 md:py-4 text-center">
-                    <div className="flex items-center justify-center gap-4">
-                      <AlertOctagon />
-                      <p>Total Kerusakan</p>
-                    </div>
-                  </td>
-                  <td className="border-b border-r px-3 py-2 md:py-4 text-center">
-                    <div className="flex items-center justify-center gap-4">
-                      <PlaySquare />
-                      <p>Data Video</p>
-                    </div>
-                  </td>
-                  <td className="border-b px-3 py-2 md:py-4 text-center">
-                    <div className="flex items-center justify-center gap-4">
-                      <List />
-                      <p>Detail</p>
-                    </div>
-                  </td>
-                </tr>
-              </thead>
+				// Kotak
+				vidRef.current.activePrediction?.forEach((element) => {
+					const { xMax, xMin, yMax, yMin } = element
+					const rectX = xMin * canvas.width
+					const rectY = yMin * canvas.height
+					const rectWidth = (xMax - xMin) * canvas.width
+					const rectHeight = (yMax - yMin) * canvas.height
+					context.strokeStyle = 'red'
+					context.lineWidth = 3
+					context.strokeRect(rectX, rectY, rectWidth, rectHeight)
+				})
 
-              <tbody>
-                {dummyData?.length !== 0 ? (
-                  dummyData.map((item, index) => (
-                    <tr key={index}>
-                      <td className="text-center py-2 md:py-4 border-r">
-                        {item.date}
-                      </td>
-                      <td className="text-center py-2 md:py-4">{item.title}</td>
-                      <td className="text-center py-2 md:py-4 border-r">
-                        {item.title}
-                      </td>
-                      <td className="text-center py-2 md:py-4 border-r">
-                        {item.totalKerusakan}
-                      </td>
-                      <td className="text-center py-2 md:py-4 px-4 border-r flex gap-2">
-                        {item.videoData.map((data, index) => {
-                          return (
-                            <div
-                              className="py-1 px-2.5 rounded-lg bg-pink-300 text-xl"
-                              key={index}
-                            >
-                              {data.text}
-                            </div>
-                          );
-                        })}
-                      </td>
-                      <td className="text-center py-2 md:py-4 px-3">
-                        <div className="grid grid-cols-4 w-full">
-                          {icons.map((item, index) => {
-                            return (
-                              <IconComponent
-                                icon={item.icon}
-                                name={item.name}
-                                key={index}
-                              />
-                            );
-                          })}
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td className="text-center text-2xl py-2 md:py-4 italic">
-                      No data found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </>
-      ) : null}
-    </div>
-  );
+				const frameData = canvas.toDataURL()
+				setFrameDataUrl(frameData)
+				vidRef.current.isclick = false
+			}
+		}
+
+		if (!!vidRef.current) {
+			vidRef.current.addEventListener('seeked', handleSeeked)
+		}
+
+		return () => {
+			if (vidRef.current) {
+				vidRef.current.removeEventListener('seeked', handleSeeked)
+			}
+		}
+	}, [])
+
+	return (
+		<div className="min-h-screen w-full bg-[#fff] pt-24 text-2xl text-black">
+			<FramePopup
+				frameDataUrl={frameDataUrl}
+				onClose={() => setFrameDataUrl()}
+			/>
+			<div className="container mx-auto w-[831px]">
+				<div className="w-full">
+					<video
+						muted
+						controls
+						src={videoFile}
+						id="video-player"
+						ref={vidRef}
+						className="rounded-2xl"
+					/>
+				</div>
+				<div className="mt-12 flex w-full items-center gap-5">
+					<div className="w-full px-6 py-3">{videoFile}</div>
+					<div className="grid w-1/2 grid-cols-4">
+						{icons.map((item) => {
+							return (
+								<IconComponent
+									icon={item.icon}
+									name={item.name}
+									key={item.id}
+								/>
+							)
+						})}
+					</div>
+				</div>
+			</div>
+
+			<div className="container mx-auto px-32 py-16">
+				<table className="w-full bg-white text-lg font-medium md:text-xl">
+					<thead className="">
+						<tr>
+							{headerTableContent.map((item) => {
+								return (
+									<td
+										className={clsx(
+											'border-b py-2 text-center md:py-4',
+											item.name != 'Detail' ? 'border-r' : ''
+										)}
+										key={item.id}
+									>
+										<div className="flex items-center justify-center gap-4">
+											{item.icon}
+											<p>{item.name}</p>
+										</div>
+									</td>
+								)
+							})}
+						</tr>
+					</thead>
+
+					<tbody>
+						{dummyData?.length !== 0 ? (
+							dummyData.map((item) => (
+								<tr key={item.id}>
+									<td className="border-r py-2 text-center md:py-4">
+										{item.duration}
+									</td>
+									<td className="py-2 text-center md:py-4">{item.title}</td>
+									<td className="border-r py-2 text-center md:py-4">
+										{item.title}
+									</td>
+									<td className="border-r py-2 text-center md:py-4">
+										{item.totalKerusakan}
+									</td>
+									<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
+										{item.videoData.map((data) => {
+											return (
+												<div
+													className="rounded-lg bg-pink-300 px-2.5 py-1 text-lg"
+													key={data.id}
+												>
+													{data.text}
+												</div>
+											)
+										})}
+									</td>
+									<td className="px-3 py-2 text-center md:py-4">
+										<div className="grid w-full grid-cols-1">
+											<IconComponent
+												onClick={() => {
+													handleSeeFrameClick(item.duration, item.prediction)
+												}}
+												icon={<Eye />}
+												name="Lihat Frame"
+											/>
+										</div>
+									</td>
+								</tr>
+							))
+						) : (
+							<tr>
+								<td className="py-2 text-center text-2xl italic md:py-4">
+									No data found
+								</td>
+							</tr>
+						)}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	)
 }
