@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import {
-  Calendar,
   AlignLeft,
   AlertOctagon,
   PlaySquare,
@@ -11,6 +10,8 @@ import {
   Map,
   Pencil,
   Trash,
+  Clock,
+  Eye
 } from "lucide-react";
 
 import IconComponent from "../components/IconComponents";
@@ -120,10 +121,7 @@ export default function Replay() {
   };
 
   const icons = [
-    { icon: <TableProperties />, name: "Lihat Tabel" },
-    { icon: <Map />, name: "Lihat Peta" },
-    { icon: <Pencil />, name: "Edit" },
-    { icon: <Trash />, name: "Hapus" },
+    { icon: <Eye />, name: "Lihat Frame" },
   ];
 
   return (
@@ -173,8 +171,8 @@ export default function Replay() {
                 <tr>
                   <td className="border-b border-r py-2 md:py-4 text-center">
                     <div className="flex items-center justify-center gap-4">
-                      <Calendar />
-                      <p>Tanggal</p>
+                      <Clock />
+                      <p>Durasi Video</p>
                     </div>
                   </td>
                   <td className="border-b border-r px-3 py-2 md:py-4 text-center">
@@ -237,7 +235,7 @@ export default function Replay() {
                         })}
                       </td>
                       <td className="text-center py-2 md:py-4 px-3">
-                        <div className="grid grid-cols-4 w-full">
+                        <div className="grid grid-cols-1 w-full">
                           {icons.map((item, index) => {
                             return (
                               <IconComponent
