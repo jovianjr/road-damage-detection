@@ -38,7 +38,7 @@ export default function Sidebar() {
 	return (
 		<nav
 			className={clsx(
-				'flex h-screen flex-col border-r bg-c-blue shadow-sm transition-all',
+				'fixed left-0 top-0 z-[10000] flex h-screen flex-col overflow-hidden border-r bg-c-blue shadow-sm transition-all',
 				expanded ? 'w-[18vw]' : 'w-[5vw]'
 			)}
 		>
@@ -50,7 +50,7 @@ export default function Sidebar() {
 					{expanded ? <ChevronFirst /> : <ChevronLast />}
 				</button>
 			</div>
-			<ul>
+			<ul className="w-[25vw]">
 				{menuList.map((menu) => (
 					<Menu
 						Icon={menu.icon}

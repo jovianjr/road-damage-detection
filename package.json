@@ -10,12 +10,14 @@
   },
   "dependencies": {
     "clsx": "^2.0.0",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.290.0",
     "next": "^14.0.0",
     "react": "^18",
     "react-dom": "^18",
     "react-webcam": "^7.2.0",
-    "react-tooltip": "^5.8.3"
+    "react-tooltip": "^5.8.3",
+    "react-leaflet": "^4.2.1"
   },
   "devDependencies": {
     "autoprefixer": "^10",
