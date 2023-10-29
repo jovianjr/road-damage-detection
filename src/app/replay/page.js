@@ -294,7 +294,6 @@ export default function Replay() {
 						id="video-player"
 						ref={vidRef}
 						className="rounded-2xl"
-						isclick="false"
 					/>
 				</div>
 				<div className="mt-12 flex w-full items-center gap-5">
