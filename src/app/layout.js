@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
 		<html lang="en">
 			<body className={clsx('flex font-poppins font-medium', poppins.variable)}>
 				<Sidebar />
-				<div className="flex-grow">{children}</div>
+				<div className="max-h-screen flex-grow overflow-auto">{children}</div>
 			</body>
 		</html>
 	)
