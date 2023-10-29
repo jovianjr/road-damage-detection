@@ -35,6 +35,17 @@ export default function Replay() {
 					text: 'Lokasi',
 				},
 			],
+			prediction: [
+				{
+					xMin: 0.6484375,
+					yMin: 0.3375,
+					xMax: 0.7203125,
+					yMax: 0.371875,
+					confidence: 0.5252203941345215,
+					class: 'pothole',
+					classId: 0,
+				},
+			],
 		},
 		{
 			id: 2,
@@ -45,6 +56,17 @@ export default function Replay() {
 				{
 					id: 1,
 					text: 'Video',
+				},
+			],
+			prediction: [
+				{
+					xMin: 0.6484389,
+					yMin: 0.3356,
+					xMax: 0.7203195,
+					yMax: 0.371876,
+					confidence: 0.5252203941345215,
+					class: 'pothole',
+					classId: 0,
 				},
 			],
 		},
@@ -135,6 +157,11 @@ export default function Replay() {
 	const [frameDataUrl, setFrameDataUrl] = useState(null)
 	const [showPopup, setShowPopup] = useState(false)
 	const [isSaved, setIsSaved] = useState(false)
+	const [activeBox, setActiveBox] = useState()
+
+	useEffect(() => {
+		console.log(activeBox)
+	}, [activeBox])
 
 	const handleSeeFrameClick = (duration) => {
 		const video = vidRef.current
@@ -148,7 +175,8 @@ export default function Replay() {
 	useEffect(() => {
 		let video
 
-		const handleSeeked = () => {
+		const handleSeeked = (activePrediction) => {
+			console.log(activePrediction)
 			const canvas = document.createElement('canvas')
 			const context = canvas.getContext('2d')
 
@@ -156,6 +184,20 @@ export default function Replay() {
 			canvas.height = video.videoHeight
 
 			context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+			// Kotak
+			if (!!activePrediction) {
+				const { xMax, xMin, yMax, yMin } = activePrediction
+				const rectX = xMin * canvas.width
+				const rectY = yMin * canvas.height
+				const rectWidth = (xMax - xMin) * canvas.width
+				const rectHeight = (yMax - yMin) * canvas.height
+				context.strokeStyle = 'red'
+				context.strokeRect(rectX, rectY, rectWidth, rectHeight)
+			} else {
+				console.log(activePrediction)
+			}
+
 			const frameData = canvas.toDataURL()
 			setFrameDataUrl(frameData)
 			console.log(frameData)
@@ -163,15 +205,15 @@ export default function Replay() {
 
 		if (!!vidRef.current) {
 			video = vidRef.current
-			vidRef.current.addEventListener('seeked', handleSeeked)
+			vidRef.current.addEventListener('seeked', () => handleSeeked(activeBox))
 		}
 
 		return () => {
 			if (video) {
-				video.removeEventListener('seeked', handleSeeked)
+				video.removeEventListener('seeked', () => handleSeeked(activeBox))
 			}
 		}
-	}, [])
+	}, [activeBox])
 
 	useEffect(() => {
 		if (frameDataUrl !== null) {
@@ -305,9 +347,10 @@ export default function Replay() {
 													{iconsDetail.map((iconDetail, index) => {
 														return (
 															<IconComponent
-																onClick={() =>
+																onClick={() => {
+																	setActiveBox(...item.prediction)
 																	handleSeeFrameClick(item.duration)
-																}
+																}}
 																icon={iconDetail.icon}
 																name={iconDetail.name}
 																key={index}
