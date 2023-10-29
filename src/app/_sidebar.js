@@ -1,62 +1,78 @@
-"use client";
+'use client'
 
 import {
-  ChevronFirst,
-  ChevronLast,
-  Video,
-  Map,
-  FolderClosed,
-} from "lucide-react";
-import Link from "next/link";
-import { useContext, useState } from "react";
-import React from "react";
-import clsx from "clsx";
+	ChevronFirst,
+	ChevronLast,
+	Video,
+	Map,
+	FolderClosed,
+} from 'lucide-react'
+import { useState } from 'react'
+import Link from 'next/link'
+import clsx from 'clsx'
 
-export default function Sidebar({ children }) {
-  const [expanded, setExpanded] = useState(true);
-  return (
-    <nav
-      className={clsx(
-        "h-screen flex flex-col bg-c-blue border-r shadow-sm transition-all",
-        expanded ? "w-[18vw]" : "w-[5vw]"
-      )}
-    >
-      <div className="p-4 pb-2 flex justify-end items-center">
-        <button
-          onClick={() => setExpanded((curr) => !curr)}
-          className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
-        >
-          {expanded ? <ChevronFirst /> : <ChevronLast />}
-        </button>
-      </div>
-      <ul>
-        <Menu icon={<Video size={25} />} text="Video" show={expanded} href="" />
+const menuList = [
+	{
+		icon: Map,
+		text: 'Peta',
+		href: '/',
+	},
+	{
+		icon: FolderClosed,
+		text: 'Daftar Rekaman',
+		href: '/daftar-rekaman',
+	},
+	{
+		icon: Video,
+		text: 'Video',
+		href: '/video',
+	},
+]
 
-        <Menu
-          icon={<FolderClosed size={25} />}
-          text="Daftar Rekaman"
-          show={expanded}
-          href=""
-        />
+export default function Sidebar() {
+	const [expanded, setExpanded] = useState(true)
 
-        <Menu icon={<Map size={25} />} text="Peta" show={expanded} href="" />
-      </ul>
-    </nav>
-  );
+	return (
+		<nav
+			className={clsx(
+				'flex h-screen flex-col border-r bg-c-blue shadow-sm transition-all',
+				expanded ? 'w-[18vw]' : 'w-[5vw]'
+			)}
+		>
+			<div className="flex items-center justify-end p-4 pb-2">
+				<button
+					onClick={() => setExpanded((prev) => !prev)}
+					className="rounded-lg bg-gray-50 p-1.5 hover:bg-gray-100"
+				>
+					{expanded ? <ChevronFirst /> : <ChevronLast />}
+				</button>
+			</div>
+			<ul>
+				{menuList.map((menu) => (
+					<Menu
+						icon={menu.icon}
+						text={menu.text}
+						show={expanded}
+						href={menu.href}
+					/>
+				))}
+			</ul>
+		</nav>
+	)
 }
 
-export function Menu({ icon, text, show, href }) {
-  return (
-    <Link
-      as="li"
-      href={href}
-      className={clsx(
-        "h-full w-full flex items-center  font-medium rounded-md cursor-pointer transition-colors group text-c-yellow gap-2",
-        show ? "justify-start px-7" : "justify-center"
-      )}
-    >
-      {icon}
-      {show ? <span className="">{text}</span> : null}
-    </Link>
-  );
+const Menu = ({ Icon = null, text = '', show = true, href = '' }) => {
+	return (
+		<Link
+			as="li"
+			href={href}
+			className={clsx(
+				'group flex h-full w-full  cursor-pointer items-center gap-2 rounded-md font-medium text-c-yellow transition-colors',
+				show ? 'justify-start px-7' : 'justify-center'
+			)}
+		>
+			<Icon size={25} />
+			{show ? <span className="">{text}</span> : null}
+		</Link>
+	)
 }
