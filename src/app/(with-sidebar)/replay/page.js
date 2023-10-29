@@ -14,7 +14,7 @@ import {
 	Eye,
 } from 'lucide-react'
 
-import FramePopup from '@/app/replay/_framePopup'
+import FramePopup from '@/app/(with-sidebar)/replay/_framePopup'
 import IconComponent from '@/app/components/IconComponents'
 import clsx from 'clsx'
 
