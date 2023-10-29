@@ -13,16 +13,19 @@ import clsx from 'clsx'
 
 const menuList = [
 	{
+		id: 'menu-1',
 		icon: Map,
 		text: 'Peta',
 		href: '/',
 	},
 	{
+		id: 'menu-2',
 		icon: FolderClosed,
 		text: 'Daftar Rekaman',
 		href: '/daftar-rekaman',
 	},
 	{
+		id: 'menu-3',
 		icon: Video,
 		text: 'Video',
 		href: '/video',
@@ -54,6 +57,7 @@ export default function Sidebar() {
 						text={menu.text}
 						show={expanded}
 						href={menu.href}
+						key={menu.id}
 					/>
 				))}
 			</ul>
@@ -63,16 +67,17 @@ export default function Sidebar() {
 
 const Menu = ({ Icon = null, text = '', show = true, href = '' }) => {
 	return (
-		<Link
-			as="li"
-			href={href}
-			className={clsx(
-				'group flex h-full w-full  cursor-pointer items-center gap-2 rounded-md font-medium text-c-yellow transition-colors',
-				show ? 'justify-start px-7' : 'justify-center'
-			)}
-		>
-			<Icon size={25} />
-			{show ? <span className="">{text}</span> : null}
-		</Link>
+		<li className="flex h-full w-full">
+			<Link
+				className={clsx(
+					'group flex h-full w-full  cursor-pointer items-center gap-2 rounded-md font-medium text-c-yellow transition-colors',
+					show ? 'justify-start px-7' : 'justify-center'
+				)}
+				href={href}
+			>
+				<Icon size={25} />
+				{show ? <span className="">{text}</span> : null}
+			</Link>
+		</li>
 	)
 }
