@@ -1,22 +1,11 @@
 'use client'
-import 'leaflet/dist/leaflet.css'
-import { MapContainer, TileLayer } from 'react-leaflet'
-
-const initialPosition = [-2, 112]
+import dynamic from 'next/dynamic'
+const Map = dynamic(() => import('@/app/(with-sidebar)/_map'), { ssr: false })
 
 export default function Home() {
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-between">
-			<MapContainer
-				className="h-screen w-full"
-				center={initialPosition}
-				zoom={6}
-			>
-				<TileLayer
-					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-				/>
-			</MapContainer>
+			<Map />
 		</main>
 	)
 }
