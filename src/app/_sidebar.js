@@ -64,7 +64,6 @@ export default function Sidebar() {
 const Menu = ({ Icon = null, text = '', show = true, href = '' }) => {
 	return (
 		<Link
-			as="li"
 			href={href}
 			className={clsx(
 				'group flex h-full w-full items-center gap-2 rounded-md pl-10',
