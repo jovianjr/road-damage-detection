@@ -1,12 +1,11 @@
 import clsx from 'clsx'
-import React, { useEffect, useState } from 'react'
 
-const FramePopup = ({ frameDataUrl, onClose, className }) => {
+const FramePopup = ({ frameDataUrl, onClose }) => {
 	return (
 		<div
 			className={clsx(
 				'fixed left-0 top-0 z-10 h-screen w-full bg-slate-500/70 text-white',
-				className
+				frameDataUrl ? '' : 'hidden'
 			)}
 		>
 			<div className="container mx-auto pt-24">

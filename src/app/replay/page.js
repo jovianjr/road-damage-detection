@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import {
 	AlignLeft,
 	AlertOctagon,
@@ -17,7 +17,6 @@ import {
 import FramePopup from '@/app/replay/_framePopup'
 import IconComponent from '@/app/components/IconComponents'
 import clsx from 'clsx'
-import { Rock_3D } from 'next/font/google'
 
 const dummyData = [
 	{
@@ -44,6 +43,24 @@ const dummyData = [
 				confidence: 0.5252203941345215,
 				class: 'pothole',
 				classId: 0,
+			},
+			{
+				xMin: 0.3,
+				yMin: 0.3,
+				xMax: 0.6,
+				yMax: 0.6,
+				confidence: 0.8,
+				class: 'large-rectangle',
+				classId: 1,
+			},
+			{
+				xMin: 0.1,
+				yMin: 0.1,
+				xMax: 0.4,
+				yMax: 0.4,
+				confidence: 0.7,
+				class: 'large-rectangle',
+				classId: 1,
 			},
 		],
 	},
@@ -212,37 +229,30 @@ const headerTableContent = [
 export default function Replay() {
 	const videoFile = 'example-video.mp4'
 	const vidRef = useRef(null)
-	const [activeTimestamp, setActiveTimestamp] = useState(0)
 	const [frameDataUrl, setFrameDataUrl] = useState(null)
-	const [showPopup, setShowPopup] = useState(false)
-	const [activeBox, setActiveBox] = useState()
 
-	const handleSeeFrameClick = (duration) => {
-		const video = vidRef.current
-
-		if (video) {
-			setActiveTimestamp(duration)
-			video.currentTime = duration
-			video.isclick = true
+	const handleSeeFrameClick = (duration, prediction) => {
+		if (vidRef.current) {
+			vidRef.current.currentTime = duration
+			vidRef.current.isclick = true
+			vidRef.current.activePrediction = prediction
 		}
 	}
 
 	useEffect(() => {
-		let video
-
-		const handleSeeked = (activePrediction) => {
+		const handleSeeked = () => {
 			if (vidRef.current.isclick) {
 				const canvas = document.createElement('canvas')
 				const context = canvas.getContext('2d')
 
-				canvas.width = video.videoWidth
-				canvas.height = video.videoHeight
+				canvas.width = vidRef.current.videoWidth
+				canvas.height = vidRef.current.videoHeight
 
-				context.drawImage(video, 0, 0, canvas.width, canvas.height)
+				context.drawImage(vidRef.current, 0, 0, canvas.width, canvas.height)
 
 				// Kotak
-				if (!!activePrediction) {
-					const { xMax, xMin, yMax, yMin } = activePrediction
+				vidRef.current.activePrediction?.forEach((element) => {
+					const { xMax, xMin, yMax, yMin } = element
 					const rectX = xMin * canvas.width
 					const rectY = yMin * canvas.height
 					const rectWidth = (xMax - xMin) * canvas.width
@@ -250,9 +260,7 @@ export default function Replay() {
 					context.strokeStyle = 'red'
 					context.lineWidth = 3
 					context.strokeRect(rectX, rectY, rectWidth, rectHeight)
-				} else {
-					console.log(activePrediction)
-				}
+				})
 
 				const frameData = canvas.toDataURL()
 				setFrameDataUrl(frameData)
@@ -261,29 +269,21 @@ export default function Replay() {
 		}
 
 		if (!!vidRef.current) {
-			video = vidRef.current
-			video.addEventListener('seeked', () => handleSeeked(activeBox))
+			vidRef.current.addEventListener('seeked', handleSeeked)
 		}
 
 		return () => {
-			if (video) {
-				video.removeEventListener('seeked', () => handleSeeked(activeBox))
+			if (vidRef.current) {
+				vidRef.current.removeEventListener('seeked', handleSeeked)
 			}
 		}
-	}, [activeBox])
-
-	useEffect(() => {
-		if (frameDataUrl !== null) {
-			setShowPopup(true)
-		}
-	}, [frameDataUrl])
+	}, [])
 
 	return (
 		<div className="min-h-screen w-full bg-[#fff] pt-24 text-2xl text-black">
 			<FramePopup
 				frameDataUrl={frameDataUrl}
-				onClose={() => setShowPopup(false)}
-				className={clsx(showPopup ? null : 'hidden')}
+				onClose={() => setFrameDataUrl()}
 			/>
 			<div className="container mx-auto w-[831px]">
 				<div className="w-full">
@@ -319,7 +319,10 @@ export default function Replay() {
 							{headerTableContent.map((item) => {
 								return (
 									<td
-										className="border-b border-r py-2 text-center md:py-4"
+										className={clsx(
+											'border-b py-2 text-center md:py-4',
+											item.name != 'Detail' ? 'border-r' : ''
+										)}
 										key={item.id}
 									>
 										<div className="flex items-center justify-center gap-4">
@@ -362,8 +365,7 @@ export default function Replay() {
 										<div className="grid w-full grid-cols-1">
 											<IconComponent
 												onClick={() => {
-													setActiveBox(...item.prediction)
-													handleSeeFrameClick(item.duration)
+													handleSeeFrameClick(item.duration, item.prediction)
 												}}
 												icon={<Eye />}
 												name="Lihat Frame"
