@@ -35,7 +35,7 @@ export default function Sidebar() {
 	return (
 		<nav
 			className={clsx(
-				'flex h-screen flex-col border-r bg-c-blue shadow-sm transition-all',
+				'fixed left-0 top-0 z-[10000] flex h-screen flex-col overflow-hidden border-r bg-c-blue shadow-sm transition-all',
 				expanded ? 'w-[18vw]' : 'w-[5vw]'
 			)}
 		>
@@ -47,7 +47,7 @@ export default function Sidebar() {
 					{expanded ? <ChevronFirst /> : <ChevronLast />}
 				</button>
 			</div>
-			<ul>
+			<ul className="w-[25vw]">
 				{menuList.map((menu) => (
 					<Menu
 						Icon={menu.icon}
@@ -67,12 +67,16 @@ const Menu = ({ Icon = null, text = '', show = true, href = '' }) => {
 			as="li"
 			href={href}
 			className={clsx(
-				'group flex h-full w-full  cursor-pointer items-center gap-2 rounded-md font-medium text-c-yellow transition-colors',
-				show ? 'justify-start px-7' : 'justify-center'
+				'group flex h-full w-full items-center gap-2 rounded-md pl-10',
+				'cursor-pointer font-medium text-c-yellow transition-all'
 			)}
 		>
-			<Icon size={25} />
-			{show ? <span className="">{text}</span> : null}
+			<Icon className="h-6 w-6" />
+			<span
+				className={clsx('transition-all', show ? 'opacity-100' : 'opacity-0')}
+			>
+				{text}
+			</span>
 		</Link>
 	)
 }
