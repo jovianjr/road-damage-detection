@@ -67,7 +67,7 @@ const Menu = ({ Icon = null, text = '', show = true, href = '' }) => {
 			as="li"
 			href={href}
 			className={clsx(
-				'group flex h-full w-full items-center gap-2 rounded-md pl-10',
+				'group flex h-full w-full items-center gap-2 rounded-md pl-6',
 				'cursor-pointer font-medium text-c-yellow transition-all'
 			)}
 		>
