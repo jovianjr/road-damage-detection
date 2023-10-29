@@ -194,19 +194,19 @@ const dummyData = [
 ]
 
 const icons = [
-	{ icon: <TableProperties />, name: 'Lihat Tabel' },
-	{ icon: <Map />, name: 'Lihat Peta' },
-	{ icon: <Pencil />, name: 'Edit' },
-	{ icon: <Trash />, name: 'Hapus' },
+	{ id: 1, icon: <TableProperties />, name: 'Lihat Tabel' },
+	{ id: 2, icon: <Map />, name: 'Lihat Peta' },
+	{ id: 3, icon: <Pencil />, name: 'Edit' },
+	{ id: 4, icon: <Trash />, name: 'Hapus' },
 ]
 
 const headerTableContent = [
-	{ icon: <Clock />, name: 'Durasi Video' },
-	{ icon: <AlignLeft />, name: 'Longitude' },
-	{ icon: <AlignLeft />, name: 'Latitude' },
-	{ icon: <AlertOctagon />, name: 'Total Kerusakan' },
-	{ icon: <PlaySquare />, name: 'Data Video' },
-	{ icon: <List />, name: 'Detail' },
+	{ id: 1, icon: <Clock />, name: 'Durasi Video' },
+	{ id: 2, icon: <AlignLeft />, name: 'Longitude' },
+	{ id: 3, icon: <AlignLeft />, name: 'Latitude' },
+	{ id: 4, icon: <AlertOctagon />, name: 'Total Kerusakan' },
+	{ id: 5, icon: <PlaySquare />, name: 'Data Video' },
+	{ id: 6, icon: <List />, name: 'Detail' },
 ]
 
 export default function Replay() {
@@ -221,8 +221,9 @@ export default function Replay() {
 		const video = vidRef.current
 
 		if (video) {
-			video.currentTime = duration
 			setActiveTimestamp(duration)
+			video.currentTime = duration
+			video.isclick = true
 		}
 	}
 
@@ -230,37 +231,38 @@ export default function Replay() {
 		let video
 
 		const handleSeeked = (activePrediction) => {
-			console.log(activePrediction)
-			const canvas = document.createElement('canvas')
-			const context = canvas.getContext('2d')
+			if (vidRef.current.isclick) {
+				const canvas = document.createElement('canvas')
+				const context = canvas.getContext('2d')
 
-			canvas.width = video.videoWidth
-			canvas.height = video.videoHeight
+				canvas.width = video.videoWidth
+				canvas.height = video.videoHeight
 
-			context.drawImage(video, 0, 0, canvas.width, canvas.height)
+				context.drawImage(video, 0, 0, canvas.width, canvas.height)
 
-			// Kotak
-			if (!!activePrediction) {
-				const { xMax, xMin, yMax, yMin } = activePrediction
-				const rectX = xMin * canvas.width
-				const rectY = yMin * canvas.height
-				const rectWidth = (xMax - xMin) * canvas.width
-				const rectHeight = (yMax - yMin) * canvas.height
-				context.strokeStyle = 'red'
-				context.lineWidth = 3
-				context.strokeRect(rectX, rectY, rectWidth, rectHeight)
-			} else {
-				console.log(activePrediction)
+				// Kotak
+				if (!!activePrediction) {
+					const { xMax, xMin, yMax, yMin } = activePrediction
+					const rectX = xMin * canvas.width
+					const rectY = yMin * canvas.height
+					const rectWidth = (xMax - xMin) * canvas.width
+					const rectHeight = (yMax - yMin) * canvas.height
+					context.strokeStyle = 'red'
+					context.lineWidth = 3
+					context.strokeRect(rectX, rectY, rectWidth, rectHeight)
+				} else {
+					console.log(activePrediction)
+				}
+
+				const frameData = canvas.toDataURL()
+				setFrameDataUrl(frameData)
+				vidRef.current.isclick = false
 			}
-
-			const frameData = canvas.toDataURL()
-			setFrameDataUrl(frameData)
-			console.log(frameData)
 		}
 
 		if (!!vidRef.current) {
 			video = vidRef.current
-			vidRef.current.addEventListener('seeked', () => handleSeeked(activeBox))
+			video.addEventListener('seeked', () => handleSeeked(activeBox))
 		}
 
 		return () => {
@@ -292,14 +294,19 @@ export default function Replay() {
 						id="video-player"
 						ref={vidRef}
 						className="rounded-2xl"
+						isclick="false"
 					/>
 				</div>
 				<div className="mt-12 flex w-full items-center gap-5">
 					<div className="w-full px-6 py-3">{videoFile}</div>
 					<div className="grid w-1/2 grid-cols-4">
-						{icons.map((item, index) => {
+						{icons.map((item) => {
 							return (
-								<IconComponent icon={item.icon} name={item.name} key={index} />
+								<IconComponent
+									icon={item.icon}
+									name={item.name}
+									key={item.id}
+								/>
 							)
 						})}
 					</div>
@@ -310,9 +317,12 @@ export default function Replay() {
 				<table className="w-full bg-white text-lg font-medium md:text-xl">
 					<thead className="">
 						<tr>
-							{headerTableContent.map((item, index) => {
+							{headerTableContent.map((item) => {
 								return (
-									<td className="border-b border-r py-2 text-center md:py-4">
+									<td
+										className="border-b border-r py-2 text-center md:py-4"
+										key={item.id}
+									>
 										<div className="flex items-center justify-center gap-4">
 											{item.icon}
 											<p>{item.name}</p>
@@ -325,8 +335,8 @@ export default function Replay() {
 
 					<tbody>
 						{dummyData?.length !== 0 ? (
-							dummyData.map((item, index) => (
-								<tr key={index}>
+							dummyData.map((item) => (
+								<tr key={item.id}>
 									<td className="border-r py-2 text-center md:py-4">
 										{item.duration}
 									</td>
@@ -338,11 +348,11 @@ export default function Replay() {
 										{item.totalKerusakan}
 									</td>
 									<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
-										{item.videoData.map((data, index) => {
+										{item.videoData.map((data) => {
 											return (
 												<div
 													className="rounded-lg bg-pink-300 px-2.5 py-1 text-lg"
-													key={index}
+													key={data.id}
 												>
 													{data.text}
 												</div>
