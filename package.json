@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.290.0",
+    "next": "^14.0.0",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.0.0"
+    "react-router-dom": "^6.17.0"
   },
   "devDependencies": {
     "autoprefixer": "^10",
