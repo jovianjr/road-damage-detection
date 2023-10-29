@@ -50,7 +50,7 @@ export default function Sidebar() {
 			<ul>
 				{menuList.map((menu) => (
 					<Menu
-						icon={menu.icon}
+						Icon={menu.icon}
 						text={menu.text}
 						show={expanded}
 						href={menu.href}
