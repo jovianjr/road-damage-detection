@@ -1,7 +1,9 @@
 import clsx from 'clsx'
 import { X } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 
 const FramePopup = ({ frameDataUrl, onClose, lat, long, secs, holes }) => {
+	const boxRef = useRef(null)
 	const convertSecsToTimestamp = (secs) => {
 		const mins = Math.floor(secs / 60)
 		const remainingSecs = secs % 60
@@ -12,6 +14,20 @@ const FramePopup = ({ frameDataUrl, onClose, lat, long, secs, holes }) => {
 		return `${mm}:${ss}`
 	}
 
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (boxRef.current && !boxRef.current.contains(event.target)) {
+				onClose()
+			}
+		}
+
+		document.addEventListener('click', handleClickOutside)
+
+		return () => {
+			document.removeEventListener('click', handleClickOutside)
+		}
+	}, [])
+
 	return (
 		<div
 			className={clsx(
@@ -20,7 +36,7 @@ const FramePopup = ({ frameDataUrl, onClose, lat, long, secs, holes }) => {
 			)}
 		>
 			<div className="container mx-auto flex h-full w-1/2 items-center justify-center">
-				<div className="relative rounded-xl bg-white p-8">
+				<div className="relative rounded-xl bg-white p-8" ref={boxRef}>
 					<img
 						src={frameDataUrl}
 						alt="Captured Frame"
