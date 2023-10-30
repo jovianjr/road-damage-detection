@@ -118,9 +118,11 @@ export default function DaftarRekaman() {
 	]
 
 	return (
-		<div className="mt-16 flex min-h-screen w-full items-start justify-center bg-[#fff] text-black">
+		<div className="mt-16 flex min-h-screen w-full flex-col items-center justify-start bg-[#fff] text-black">
+			<h1 className="mb-8 w-3/4 text-left text-2xl">Daftar Rekaman</h1>
+
 			<table className="w-3/4 bg-white text-lg font-medium md:text-xl">
-				<thead className="">
+				<thead>
 					<tr>
 						{headerTableContent.map((item) => {
 							return (

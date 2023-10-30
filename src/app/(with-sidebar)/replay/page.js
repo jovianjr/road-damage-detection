@@ -30,9 +30,14 @@ const dummyData = [
 				id: 1,
 				text: 'Video',
 			},
+
 			{
 				id: 2,
 				text: 'Lokasi',
+			},
+			{
+				id: 3,
+				text: 'Video',
 			},
 		],
 		prediction: [
@@ -242,6 +247,7 @@ export default function Replay() {
 		long: '',
 		secs: 0,
 		holes: 0,
+		jenisKerusakan: [],
 	})
 
 	const handleSeeFrameClick = (frameItem) => {
@@ -251,6 +257,7 @@ export default function Replay() {
 			long: frameItem.longitude,
 			secs: frameItem.duration,
 			holes: frameItem.totalKerusakan,
+			jenisKerusakan: frameItem.videoData,
 		}))
 
 		if (vidRef.current) {
@@ -400,7 +407,7 @@ export default function Replay() {
 							))
 						) : (
 							<tr>
-								<td className="py-2 text-center text-2xl italic md:py-4">
+								<td className="py-2 text-center text-xl italic md:py-4">
 									No data found
 								</td>
 							</tr>

@@ -1,9 +1,19 @@
 import clsx from 'clsx'
 import { X } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-const FramePopup = ({ frameDataUrl, onClose, lat, long, secs, holes }) => {
+const FramePopup = ({
+	frameDataUrl,
+	onClose,
+	lat,
+	long,
+	secs,
+	holes,
+	jenisKerusakan,
+}) => {
 	const boxRef = useRef(null)
+	const [jenisKerusakanMap, setJenisKerusakanMap] = useState(new Map())
+
 	const convertSecsToTimestamp = (secs) => {
 		const mins = Math.floor(secs / 60)
 		const remainingSecs = secs % 60
@@ -28,6 +38,19 @@ const FramePopup = ({ frameDataUrl, onClose, lat, long, secs, holes }) => {
 		}
 	}, [])
 
+	useEffect(() => {
+		const newJenisKerusakanMap = new Map()
+		jenisKerusakan?.forEach((element) => {
+			const { text } = element
+			if (newJenisKerusakanMap.has(text)) {
+				newJenisKerusakanMap.set(text, newJenisKerusakanMap.get(text) + 1)
+			} else {
+				newJenisKerusakanMap.set(text, 1)
+			}
+		})
+		setJenisKerusakanMap(newJenisKerusakanMap)
+	}, [jenisKerusakan])
+
 	return (
 		<div
 			className={clsx(
@@ -50,14 +73,25 @@ const FramePopup = ({ frameDataUrl, onClose, lat, long, secs, holes }) => {
 					</button>
 					<div className="mt-12 flex items-start justify-between text-lg text-black">
 						<div className="flex flex-col items-start">
-							<p className="text-xl font-semibold">
-								{convertSecsToTimestamp(secs)}
+							<div>{holes} Kerusakan</div>
+							<p>
+								{[...jenisKerusakanMap].map((element, index) => (
+									<span key={index} className="font-normal">
+										{element[0]}
+										{element[1] > 1 && ` (${element[1]})`}
+										{index !== jenisKerusakanMap.size - 1 ? ', ' : ''}
+									</span>
+								))}
 							</p>
+						</div>
+						<div className="flex flex-col items-end">
 							<p>
 								{lat}, {long}
 							</p>
+							<p className="text-xl font-semibold">
+								{convertSecsToTimestamp(secs)}
+							</p>
 						</div>
-						<div>{holes} Kerusakan</div>
 					</div>
 				</div>
 			</div>
