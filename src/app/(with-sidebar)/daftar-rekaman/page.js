@@ -1,17 +1,23 @@
-import React from 'react'
+import Link from 'next/link'
+import clsx from 'clsx'
 import {
 	Calendar,
 	AlignLeft,
 	AlertOctagon,
 	PlaySquare,
 	List,
-	TableProperties,
-	Map,
-	Pencil,
-	Trash,
+	Fullscreen,
 } from 'lucide-react'
 
 import IconComponent from '@/app/components/IconComponents'
+
+const headerTableContent = [
+	{ id: 1, icon: <Calendar />, name: 'Tanggal' },
+	{ id: 2, icon: <AlignLeft />, name: 'Judul' },
+	{ id: 4, icon: <AlertOctagon />, name: 'Total Kerusakan' },
+	{ id: 5, icon: <PlaySquare />, name: 'Data Video' },
+	{ id: 6, icon: <List />, name: 'Detail' },
+]
 
 export default function DaftarRekaman() {
 	const dummyData = [
@@ -111,48 +117,29 @@ export default function DaftarRekaman() {
 		},
 	]
 
-	const icons = [
-		{ icon: <TableProperties />, name: 'Lihat Tabel' },
-		{ icon: <Map />, name: 'Lihat Peta' },
-		{ icon: <Pencil />, name: 'Edit' },
-		{ icon: <Trash />, name: 'Hapus' },
-	]
-
 	return (
-		<div className="flex min-h-screen w-full items-center justify-center bg-[#fff] text-black">
-			<table className="w-3/4 bg-white text-lg font-medium md:text-2xl">
+		<div className="mt-16 flex min-h-screen w-full items-start justify-center bg-[#fff] text-black">
+			<table className="w-3/4 bg-white text-lg font-medium md:text-xl">
 				<thead className="">
 					<tr>
-						<td className="border-b border-r py-2 text-center md:py-4">
-							<div className="flex items-center justify-center gap-4">
-								<Calendar />
-								<p>Tanggal</p>
-							</div>
-						</td>
-						<td className="border-b border-r px-3 py-2 text-center md:py-4">
-							<div className="flex items-center justify-center gap-4">
-								<AlignLeft />
-								<p>Judul</p>
-							</div>
-						</td>
-						<td className="border-b border-r px-3 py-2 text-center md:py-4">
-							<div className="flex items-center justify-center gap-4">
-								<AlertOctagon />
-								<p>Total Kerusakan</p>
-							</div>
-						</td>
-						<td className="border-b border-r px-3 py-2 text-center md:py-4">
-							<div className="flex items-center justify-center gap-4">
-								<PlaySquare />
-								<p>Data Video</p>
-							</div>
-						</td>
-						<td className="border-b px-3 py-2 text-center md:py-4">
-							<div className="flex items-center justify-center gap-4">
-								<List />
-								<p>Detail</p>
-							</div>
-						</td>
+						{headerTableContent.map((item) => {
+							return (
+								<td
+									className={clsx(
+										'border-b py-2 text-center md:py-4',
+										item !== headerTableContent[headerTableContent.length - 1]
+											? 'border-r'
+											: ''
+									)}
+									key={item.id}
+								>
+									<div className="flex items-center justify-center gap-4">
+										{item.icon}
+										<p>{item.name}</p>
+									</div>
+								</td>
+							)
+						})}
 					</tr>
 				</thead>
 
@@ -182,16 +169,18 @@ export default function DaftarRekaman() {
 									})}
 								</td>
 								<td className="px-3 py-2 text-center md:py-4">
-									<div className="grid w-full grid-cols-4">
-										{icons.map((item, index) => {
-											return (
-												<IconComponent
-													icon={item.icon}
-													name={item.name}
-													key={index}
-												/>
-											)
-										})}
+									<div className="grid w-full grid-cols-1">
+										<Link
+											href={{
+												pathname: '/replay',
+												query: { name: 'test' },
+											}}
+										>
+											<IconComponent
+												icon={<Fullscreen />}
+												name="Lihat Replay"
+											/>
+										</Link>
 									</div>
 								</td>
 							</tr>
