@@ -10,6 +10,7 @@ import {
 import { useState } from 'react'
 import Link from 'next/link'
 import clsx from 'clsx'
+import { usePathname } from 'next/navigation'
 
 const menuList = [
 	{
@@ -33,6 +34,7 @@ const menuList = [
 ]
 
 export default function Sidebar() {
+	const pathname = usePathname()
 	const [expanded, setExpanded] = useState(false)
 
 	return (
@@ -42,10 +44,10 @@ export default function Sidebar() {
 				expanded ? 'w-[18vw]' : 'w-[5vw]'
 			)}
 		>
-			<div className="flex items-center justify-end p-4 pb-2">
+			<div className="flex items-center justify-end py-4 pr-5">
 				<button
 					onClick={() => setExpanded((prev) => !prev)}
-					className="rounded-lg bg-gray-50 p-1.5 hover:bg-gray-100"
+					className="rounded-lg bg-c-yellow p-1.5 hover:bg-c-yellow/80"
 				>
 					{expanded ? <ChevronFirst /> : <ChevronLast />}
 				</button>
@@ -53,6 +55,7 @@ export default function Sidebar() {
 			<ul className="w-[25vw]">
 				{menuList.map((menu) => (
 					<Menu
+						active={pathname === menu.href}
 						Icon={menu.icon}
 						text={menu.text}
 						show={expanded}
@@ -65,13 +68,14 @@ export default function Sidebar() {
 	)
 }
 
-const Menu = ({ Icon = null, text = '', show = true, href = '' }) => {
+const Menu = ({ active, Icon = null, text = '', show = true, href = '' }) => {
 	return (
 		<Link
 			href={href}
 			className={clsx(
-				'group flex h-full w-full items-center gap-2 rounded-md pl-6',
-				'cursor-pointer font-medium text-c-yellow transition-all'
+				'group flex h-full w-full items-center gap-2 pl-6',
+				'cursor-pointer font-medium transition-all',
+				active ? 'bg-c-yellow text-c-blue' : 'text-c-yellow'
 			)}
 		>
 			<Icon className="h-6 w-6" />
