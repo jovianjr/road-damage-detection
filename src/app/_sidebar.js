@@ -13,16 +13,19 @@ import clsx from 'clsx'
 
 const menuList = [
 	{
+		id: 'menu-1',
 		icon: Map,
 		text: 'Peta',
 		href: '/',
 	},
 	{
+		id: 'menu-2',
 		icon: FolderClosed,
 		text: 'Daftar Rekaman',
 		href: '/daftar-rekaman',
 	},
 	{
+		id: 'menu-3',
 		icon: Video,
 		text: 'Video',
 		href: '/video',
@@ -30,12 +33,12 @@ const menuList = [
 ]
 
 export default function Sidebar() {
-	const [expanded, setExpanded] = useState(true)
+	const [expanded, setExpanded] = useState(false)
 
 	return (
 		<nav
 			className={clsx(
-				'fixed left-0 top-0 z-[10000] flex h-screen flex-col overflow-hidden border-r bg-c-blue shadow-sm transition-all',
+				'flex h-screen flex-col overflow-hidden bg-c-blue shadow-sm transition-all',
 				expanded ? 'w-[18vw]' : 'w-[5vw]'
 			)}
 		>
@@ -54,6 +57,7 @@ export default function Sidebar() {
 						text={menu.text}
 						show={expanded}
 						href={menu.href}
+						key={menu.id}
 					/>
 				))}
 			</ul>
