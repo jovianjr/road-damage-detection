@@ -22,7 +22,8 @@ const dummyData = [
 	{
 		id: 1,
 		duration: '34',
-		title: 'Jl Gamping',
+		latitude: 'Jl Gamping',
+		longitude: 'Jl Gamping',
 		totalKerusakan: 13,
 		videoData: [
 			{
@@ -67,7 +68,8 @@ const dummyData = [
 	{
 		id: 2,
 		duration: '57',
-		title: 'Maguwoharjo',
+		latitude: 'Maguwoharjo',
+		longitude: 'Maguwoharjo',
 		totalKerusakan: 7,
 		videoData: [
 			{
@@ -90,7 +92,8 @@ const dummyData = [
 	{
 		id: 3,
 		duration: '87',
-		title: 'Parangkritis',
+		latitude: 'Parangkritis',
+		longitude: 'Parangkritis',
 		totalKerusakan: 32,
 		videoData: [
 			{
@@ -117,7 +120,8 @@ const dummyData = [
 	{
 		id: 4,
 		duration: '90',
-		title: 'Jl Pramuka',
+		latitude: 'Jl Pramuka',
+		longitude: 'Jl Pramuka',
 		totalKerusakan: 6,
 		videoData: [
 			{
@@ -140,7 +144,8 @@ const dummyData = [
 	{
 		id: 5,
 		duration: '111',
-		title: 'Jl Monjali',
+		latitude: 'Jl Monjali',
+		longitude: 'Jl Monjali',
 		totalKerusakan: 2,
 		videoData: [
 			{
@@ -163,7 +168,8 @@ const dummyData = [
 	{
 		id: 6,
 		duration: '134',
-		title: 'Kauman',
+		latitude: 'Kauman',
+		longitude: 'Kauman',
 		totalKerusakan: 19,
 		videoData: [
 			{
@@ -187,7 +193,8 @@ const dummyData = [
 	{
 		id: 7,
 		duration: '156',
-		title: 'Babarsari',
+		latitude: 'Babarsari',
+		longitude: 'Babarsari',
 		totalKerusakan: 5,
 		videoData: [
 			{
@@ -230,12 +237,26 @@ export default function Replay() {
 	const videoFile = 'example-video.mp4'
 	const vidRef = useRef(null)
 	const [frameDataUrl, setFrameDataUrl] = useState(null)
+	const [activeFrame, setActiveFrame] = useState({
+		lat: '',
+		long: '',
+		secs: 0,
+		holes: 0,
+	})
 
-	const handleSeeFrameClick = (duration, prediction) => {
+	const handleSeeFrameClick = (frameItem) => {
+		setActiveFrame((prev) => ({
+			...prev,
+			lat: frameItem.latitude,
+			long: frameItem.longitude,
+			secs: frameItem.duration,
+			holes: frameItem.totalKerusakan,
+		}))
+
 		if (vidRef.current) {
-			vidRef.current.currentTime = duration
+			vidRef.current.currentTime = frameItem.duration
 			vidRef.current.isclick = true
-			vidRef.current.activePrediction = prediction
+			vidRef.current.activePrediction = frameItem.prediction
 		}
 	}
 
@@ -284,6 +305,7 @@ export default function Replay() {
 			<FramePopup
 				frameDataUrl={frameDataUrl}
 				onClose={() => setFrameDataUrl()}
+				{...activeFrame}
 			/>
 			<div className="container mx-auto w-[831px]">
 				<div className="w-full">
@@ -321,7 +343,9 @@ export default function Replay() {
 									<td
 										className={clsx(
 											'border-b py-2 text-center md:py-4',
-											item.name != 'Detail' ? 'border-r' : ''
+											item !== headerTableContent[headerTableContent.length - 1]
+												? 'border-r'
+												: ''
 										)}
 										key={item.id}
 									>
@@ -342,9 +366,9 @@ export default function Replay() {
 									<td className="border-r py-2 text-center md:py-4">
 										{item.duration}
 									</td>
-									<td className="py-2 text-center md:py-4">{item.title}</td>
+									<td className="py-2 text-center md:py-4">{item.latitude}</td>
 									<td className="border-r py-2 text-center md:py-4">
-										{item.title}
+										{item.longitude}
 									</td>
 									<td className="border-r py-2 text-center md:py-4">
 										{item.totalKerusakan}
@@ -365,7 +389,7 @@ export default function Replay() {
 										<div className="grid w-full grid-cols-1">
 											<IconComponent
 												onClick={() => {
-													handleSeeFrameClick(item.duration, item.prediction)
+													handleSeeFrameClick(item)
 												}}
 												icon={<Eye />}
 												name="Lihat Frame"
