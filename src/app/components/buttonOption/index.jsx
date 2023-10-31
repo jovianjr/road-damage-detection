@@ -3,6 +3,7 @@ import Button from '@/app/components/button'
 import { useMemo } from 'react'
 
 export default function ButtonOption({
+	children = null,
 	className = '',
 	buttonText = '',
 	buttonClassname = '',
@@ -19,11 +20,17 @@ export default function ButtonOption({
 				className
 			)}
 		>
-			{Icon && <Icon className="h-20 w-20 text-c-blue" />}
-			<Button
-				text={buttonText}
-				className={`group-hover:!bg-c-yellow/80 ${buttonClassname}`}
-			/>
+			{children ? (
+				children
+			) : (
+				<>
+					{Icon && <Icon className="h-20 w-20 text-c-blue" />}
+					<Button
+						text={buttonText}
+						className={`group-hover:!bg-c-yellow/80 ${buttonClassname}`}
+					/>
+				</>
+			)}
 		</div>
 	)
 }

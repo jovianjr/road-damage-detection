@@ -19,8 +19,9 @@ var contentTypes = [
 
 const WebcamStreamCapture = () => {
 	const [browserSupport, setBrowserSupport] = useState(true)
-	const [blobUrl, setBlobUrl] = useState()
 	const [contentType, setContentType] = useState({})
+	const [blob, setBlob] = useState()
+	const [locationData, setLocationData] = useState([])
 
 	useEffect(() => {
 		CheckSupportCamera()
@@ -59,13 +60,19 @@ const WebcamStreamCapture = () => {
 	return (
 		<div className="h-screen w-screen bg-white">
 			{browserSupport && contentType ? (
-				blobUrl ? (
-					<Action contentType={contentType} blobUrl={blobUrl} />
+				blob ? (
+					<Action
+						blob={blob}
+						contentType={contentType}
+						locationData={locationData}
+					/>
 				) : (
 					<Record
 						contentType={contentType}
-						setBlobUrl={setBlobUrl}
 						videoConstraints={videoConstraints}
+						locationData={locationData}
+						setLocationData={setLocationData}
+						setBlob={setBlob}
 					/>
 				)
 			) : (

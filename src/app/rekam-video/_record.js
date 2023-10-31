@@ -1,19 +1,19 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 
 const Record = ({
 	contentType = {},
-	setBlobUrl = () => {},
+	setBlob = () => {},
 	videoConstraints = {},
+	locationData = [],
+	setLocationData = () => {},
 }) => {
 	const webCamRef = useRef(null)
 	const mediaRecorderRef = useRef(null)
 	const captureLocation = useRef()
 	const [capturing, setCapturing] = useState(false)
-	const [recordedChunks, setRecordedChunks] = useState([])
-	const [locationData, setLocationdata] = useState([])
 	const [durationData, setDurationData] = useState({})
 
 	const startCapture = async () => {
@@ -25,9 +25,8 @@ const Record = ({
 			handleDataAvailable
 		)
 		mediaRecorderRef.current.addEventListener('start', () => {
-			setBlobUrl()
-			setLocationdata([])
-			setRecordedChunks([])
+			setBlob()
+			setLocationData([])
 			setCapturing(true)
 			setDurationData({
 				start: Date.now(),
@@ -65,11 +64,12 @@ const Record = ({
 		} else {
 			navigator.geolocation.getCurrentPosition(
 				(position) => {
-					setLocationdata((prev) => [
+					setLocationData((prev) => [
 						...prev,
 						{
-							lat: position.coords.latitude,
-							long: position.coords.longitude,
+							microTime: Date.now(),
+							latitude: position.coords.latitude,
+							longitude: position.coords.longitude,
 						},
 					])
 				},
@@ -87,9 +87,7 @@ const Record = ({
 			const blob = new Blob([data], {
 				type: contentType.type,
 			})
-			const url = URL.createObjectURL(blob)
-			setBlobUrl(url)
-			setRecordedChunks([])
+			setBlob(blob)
 		}
 	}
 
@@ -102,8 +100,8 @@ const Record = ({
 					videoConstraints={videoConstraints}
 				/>
 				<p className="float-left px-2 py-1">
-					[{locationData[locationData.length - 1]?.lat ?? '--'},
-					{locationData[locationData.length - 1]?.long ?? '--'}]
+					[{locationData[locationData.length - 1]?.latitude ?? '--'},
+					{locationData[locationData.length - 1]?.longitude ?? '--'}]
 				</p>
 				<p className="float-right px-2 py-1">
 					{durationData?.duration ?? '--:--:--'}
