@@ -11,9 +11,16 @@ const videoConstraints = {
 	frameRate: { ideal: 15, max: 15 },
 }
 
+var contentTypes = [
+	{ type: 'video/x-matroska', extension: 'mkv' },
+	{ type: 'video/webm', extension: 'webm' },
+	{ type: 'video/mp4', extension: 'mp4' },
+]
+
 const WebcamStreamCapture = () => {
 	const [browserSupport, setBrowserSupport] = useState(true)
 	const [blobUrl, setBlobUrl] = useState()
+	const [contentType, setContentType] = useState({})
 
 	useEffect(() => {
 		CheckSupportCamera()
@@ -28,6 +35,12 @@ const WebcamStreamCapture = () => {
 			.catch(() => {
 				setBrowserSupport(false)
 			})
+
+		contentTypes.forEach((content) => {
+			if (MediaRecorder.isTypeSupported(content.type)) {
+				setContentType(content)
+			}
+		})
 	}
 
 	const CheckSupportLocation = () => {
@@ -45,11 +58,15 @@ const WebcamStreamCapture = () => {
 
 	return (
 		<div className="h-screen w-screen bg-white">
-			{browserSupport ? (
+			{browserSupport && contentType ? (
 				blobUrl ? (
-					<Action blobUrl={blobUrl} />
+					<Action contentType={contentType} blobUrl={blobUrl} />
 				) : (
-					<Record setBlobUrl={setBlobUrl} videoConstraints={videoConstraints} />
+					<Record
+						contentType={contentType}
+						setBlobUrl={setBlobUrl}
+						videoConstraints={videoConstraints}
+					/>
 				)
 			) : (
 				<div className="mx-auto flex h-full w-auto flex-col items-center justify-center gap-2 px-40">

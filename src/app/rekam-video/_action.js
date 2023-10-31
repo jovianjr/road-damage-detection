@@ -1,13 +1,13 @@
 import { DownloadIcon, UploadCloudIcon } from 'lucide-react'
 import ButtonOption from '@/app/components/buttonOption'
 
-const Action = ({ blobUrl }) => {
+const Action = ({ blobUrl, contentType }) => {
 	const handleDownload = () => {
 		const a = document.createElement('a')
 		document.body.appendChild(a)
 		a.style = 'display: none'
 		a.href = blobUrl
-		a.download = `RDD-${Date.now()}.webm`
+		a.download = `RDD-${Date.now()}.${contentType.extension}`
 		a.click()
 	}
 
