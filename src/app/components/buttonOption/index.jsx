@@ -1,9 +1,8 @@
 import clsx from 'clsx'
 import Button from '@/app/components/button'
+import { useMemo } from 'react'
 
 export default function ButtonOption({
-	as = 'button',
-	href = null,
 	className = '',
 	buttonText = '',
 	buttonClassname = '',
@@ -12,21 +11,19 @@ export default function ButtonOption({
 	onClick = () => {},
 }) {
 	return (
-		<a
-			as={as}
-			href={href}
+		<div
 			download={download}
 			onClick={onClick}
 			className={clsx(
-				'border-c-blue flex aspect-square flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed px-6 py-4 font-semibold transition-all hover:border-solid',
+				'group flex aspect-square cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed border-c-blue px-6 py-4 font-semibold transition-all hover:bg-c-blue/10',
 				className
 			)}
 		>
-			<Icon className="text-c-blue h-20 w-20" />
+			{Icon && <Icon className="h-20 w-20 text-c-blue" />}
 			<Button
 				text={buttonText}
-				className={buttonClassname}
+				className={`group-hover:!bg-c-yellow/80 ${buttonClassname}`}
 			/>
-		</a>
+		</div>
 	)
 }
