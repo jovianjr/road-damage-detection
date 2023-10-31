@@ -11,6 +11,7 @@ export default function UploadFile({
 	required = false,
 	dropable = true,
 	preview = true,
+	disabled = false,
 	onChange = () => {},
 }) {
 	const [file, setFile] = useState({})
@@ -19,10 +20,8 @@ export default function UploadFile({
 
 	const handleFileChange = (event) => {
 		const file = event.target.files[0]
-		console.log(file)
 		setFile(file)
 		setFileUrl(URL.createObjectURL(file))
-		onChange(event)
 		if (type === 'csv') {
 			const reader = new FileReader()
 			reader.onload = (e) => {
@@ -31,6 +30,7 @@ export default function UploadFile({
 			}
 			reader.readAsText(file)
 		}
+		onChange(file)
 	}
 
 	const handleDrop = (event) => {
@@ -68,8 +68,14 @@ export default function UploadFile({
 					}
 					name={name}
 					onChange={handleFileChange}
+					disabled={disabled}
 				/>
-				<span className="relative w-full cursor-pointer overflow-hidden rounded-full border border-c-blue px-4 py-2 hover:bg-c-blue/10">
+				<span
+					className={clsx(
+						'relative w-full cursor-pointer overflow-hidden rounded-full border border-c-blue px-4 py-2 hover:bg-c-blue/10',
+						disabled ? 'cursor-not-allowed !bg-c-blue/10' : ''
+					)}
+				>
 					<span className="absolute left-0 top-0 flex h-full w-28 items-center justify-center bg-c-blue px-4 text-white">
 						Pilih File
 					</span>
@@ -81,7 +87,10 @@ export default function UploadFile({
 					<span
 						onDrop={handleDrop}
 						onDragOver={handleDragOver}
-						className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border border-c-blue text-lg text-c-blue hover:bg-c-blue/10"
+						className={clsx(
+							'flex h-full w-full cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border border-c-blue text-lg text-c-blue hover:bg-c-blue/10',
+							disabled ? 'cursor-not-allowed !bg-c-blue/10' : ''
+						)}
 					>
 						<>
 							<UploadCloudIcon className="h-32 w-32" />

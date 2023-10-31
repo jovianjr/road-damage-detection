@@ -5,14 +5,19 @@ export const getAllRoad = async () => {
 	return response.data
 }
 
-// export const getPatterns = async (pattern_id) => {
-// 	const response = await axios.get(`/api/stock-patterns/${pattern_id ?? ''}`)
-// 	return response.data
-// }
+export const createRoad = async ({ title = '', url = '' }) => {
+	const response = await axios.post(`/api/roads`, {
+		title: title,
+		videoUrl: url,
+	})
+	return response.data
+}
 
-// export const createAttempt = async (pattern_id) => {
-// 	const response = await axios.post(
-// 		`/api/stock-patterns/${pattern_id}/attempts`
-// 	)
-// 	return response.data
-// }
+export const updateRoadLocation = async ({ id = null, formData = null }) => {
+	const response = await axios.put(`/api/roads/${id}/locations/csv`, formData, {
+		headers: {
+			'Content-Type': 'multipart/form-data',
+		},
+	})
+	return response.data
+}
