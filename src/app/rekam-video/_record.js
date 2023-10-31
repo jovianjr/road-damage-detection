@@ -3,56 +3,40 @@
 import { useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 
-const Record = ({ setBlobUrl = () => {}, videoConstraints = {} }) => {
+const Record = ({
+	contentType = {},
+	setBlob = () => {},
+	videoConstraints = {},
+	locationData = [],
+	setLocationData = () => {},
+}) => {
 	const webCamRef = useRef(null)
 	const mediaRecorderRef = useRef(null)
 	const captureLocation = useRef()
 	const [capturing, setCapturing] = useState(false)
-	const [recordedChunks, setRecordedChunks] = useState([])
-	const [locationData, setLocationdata] = useState([])
 	const [durationData, setDurationData] = useState({})
 
 	const startCapture = async () => {
-		setLocationdata([])
-		setRecordedChunks([])
-		setCapturing(true)
-
-		let mediaChunks = []
-
 		mediaRecorderRef.current = new MediaRecorder(webCamRef.current.stream, {
-			mimeType: 'video/webm',
+			mimeType: contentType.type,
 		})
-		mediaRecorderRef.current.addEventListener('dataavailable', ({ data }) => {
-			mediaChunks.push(data)
-		})
-
+		mediaRecorderRef.current.addEventListener(
+			'dataavailable',
+			handleDataAvailable
+		)
 		mediaRecorderRef.current.addEventListener('start', () => {
-			setBlobUrl()
-			setLocationdata([])
+			setBlob()
+			setLocationData([])
+			setCapturing(true)
 			setDurationData({
 				start: Date.now(),
 				stop: null,
 				duration: '00:00:00',
 			})
-
-			console.log(':stttartt')
 			captureLocation.current = setInterval(() => {
 				getDuration()
 				getLocation()
 			}, 1000)
-		})
-
-		mediaRecorderRef.current.addEventListener('stop', () => {
-			clearInterval(captureLocation.current)
-			setCapturing(false)
-			if (mediaChunks.length) {
-				const blob = new Blob(mediaChunks, {
-					type: 'video/webm',
-				})
-				const url = URL.createObjectURL(blob)
-				setBlobUrl(url)
-				mediaChunks = []
-			}
 		})
 
 		mediaRecorderRef.current.start()
@@ -80,11 +64,12 @@ const Record = ({ setBlobUrl = () => {}, videoConstraints = {} }) => {
 		} else {
 			navigator.geolocation.getCurrentPosition(
 				(position) => {
-					setLocationdata((prev) => [
+					setLocationData((prev) => [
 						...prev,
 						{
-							lat: position.coords.latitude,
-							long: position.coords.longitude,
+							microTime: Date.now(),
+							latitude: position.coords.latitude,
+							longitude: position.coords.longitude,
 						},
 					])
 				},
@@ -95,17 +80,28 @@ const Record = ({ setBlobUrl = () => {}, videoConstraints = {} }) => {
 		}
 	}
 
+	const handleDataAvailable = ({ data }) => {
+		clearInterval(captureLocation.current)
+		setCapturing(false)
+		if (data.size > 0) {
+			const blob = new Blob([data], {
+				type: contentType.type,
+			})
+			setBlob(blob)
+		}
+	}
+
 	return (
 		<section className="flex h-full w-full items-center justify-center">
-			<div className="border-c-blue relative border-2">
+			<div className="relative border-2 border-c-blue">
 				<Webcam
 					audio={false}
 					ref={webCamRef}
 					videoConstraints={videoConstraints}
 				/>
 				<p className="float-left px-2 py-1">
-					[{locationData[locationData.length - 1]?.lat ?? '--'},
-					{locationData[locationData.length - 1]?.long ?? '--'}]
+					[{locationData[locationData.length - 1]?.latitude ?? '--'},
+					{locationData[locationData.length - 1]?.longitude ?? '--'}]
 				</p>
 				<p className="float-right px-2 py-1">
 					{durationData?.duration ?? '--:--:--'}
@@ -126,9 +122,6 @@ const Record = ({ setBlobUrl = () => {}, videoConstraints = {} }) => {
 					>
 						Start Capture
 					</button>
-				)}
-				{recordedChunks.length > 0 && (
-					<button onClick={handleDownload}>Download</button>
 				)}
 			</div>
 		</section>

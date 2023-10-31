@@ -7,7 +7,7 @@ import { useMutation } from 'react-query'
 import Button from '@/app/components/button'
 import UploadFile from '@/app/components/uploadFile'
 import { uploadFileToMinio } from '@/utils/services/upload'
-import { createRoad, updateRoadLocation } from '@/utils/services/road'
+import { createRoad, updateRoadLocationByCSV } from '@/utils/services/road'
 import { useRouter } from 'next/navigation'
 
 export default function TambahVideo() {
@@ -42,7 +42,7 @@ export default function TambahVideo() {
 		mutationFn: (data) => {
 			const formData = new FormData()
 			formData.append('csv', fileCSV)
-			return updateRoadLocation({
+			return updateRoadLocationByCSV({
 				id: data._id,
 				formData: formData,
 			})
