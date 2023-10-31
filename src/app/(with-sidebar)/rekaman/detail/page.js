@@ -14,7 +14,7 @@ import {
 	Eye,
 } from 'lucide-react'
 
-import FramePopup from '@/app/(with-sidebar)/replay/_framePopup'
+import FramePopup from '@/app/(with-sidebar)/rekaman/detail/_framePopup'
 import IconComponent from '@/app/components/IconComponents'
 import clsx from 'clsx'
 
@@ -239,7 +239,7 @@ const headerTableContent = [
 ]
 
 export default function Replay() {
-	const videoFile = 'example-video.mp4'
+	const videoFile = '/example-video.mp4'
 	const vidRef = useRef(null)
 	const [frameDataUrl, setFrameDataUrl] = useState(null)
 	const [activeFrame, setActiveFrame] = useState({

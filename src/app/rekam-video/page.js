@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import { XCircleIcon } from 'lucide-react'
-import Record from '@/app/rekam/_record'
-import Action from '@/app/rekam/_action'
+import Record from '@/app/rekam-video/_record'
+import Action from '@/app/rekam-video/_action'
 
 const videoConstraints = {
 	width: 1080,
 	height: 640,
-	frameRate: { ideal: 5, max: 5 },
+	frameRate: { ideal: 15, max: 15 },
 }
 
 const WebcamStreamCapture = () => {
@@ -49,10 +49,7 @@ const WebcamStreamCapture = () => {
 				blobUrl ? (
 					<Action blobUrl={blobUrl} />
 				) : (
-					<Record
-						setBlobUrl={setBlobUrl}
-						videoConstraints={videoConstraints}
-					/>
+					<Record setBlobUrl={setBlobUrl} videoConstraints={videoConstraints} />
 				)
 			) : (
 				<div className="mx-auto flex h-full w-auto flex-col items-center justify-center gap-2 px-40">
@@ -60,11 +57,15 @@ const WebcamStreamCapture = () => {
 					<h1 className="text-lg font-semibold md:text-xl lg:text-2xl">
 						Browser tidak mendukung
 					</h1>
-					<p className="md:text-md text-xs lg:text-lg">
-						Mohon maaf, browser yang ada gunakan tidak
-						mendukung fitur ini. Coba lagi menggunakan
-						browser lainnya
+					<p className="md:text-md text-center text-xs lg:text-lg">
+						Mohon maaf, browser yang ada gunakan tidak mendukung fitur ini.
+						<br />
+						Pastikan browser anda mendukung:
 					</p>
+					<ul className="list-disc">
+						<li>Camera</li>
+						<li>Location</li>
+					</ul>
 				</div>
 			)}
 		</div>

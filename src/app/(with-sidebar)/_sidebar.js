@@ -23,13 +23,13 @@ const menuList = [
 		id: 'menu-2',
 		icon: FolderClosed,
 		text: 'Daftar Rekaman',
-		href: '/daftar-rekaman',
+		href: '/rekaman',
 	},
 	{
 		id: 'menu-3',
 		icon: Video,
-		text: 'Video',
-		href: '/video',
+		text: 'Tambah Video',
+		href: '/tambah-video',
 	},
 ]
 
@@ -55,7 +55,10 @@ export default function Sidebar() {
 			<ul className="w-[25vw]">
 				{menuList.map((menu) => (
 					<Menu
-						active={pathname === menu.href}
+						active={
+							(menu.href != '/' && pathname.includes(menu.href)) ||
+							(menu.href == '/' && pathname === menu.href)
+						}
 						Icon={menu.icon}
 						text={menu.text}
 						show={expanded}

@@ -1,4 +1,4 @@
-import Sidebar from '@/app/_sidebar'
+import Sidebar from '@/app/(with-sidebar)/_sidebar'
 
 export default function withSidebarLayout({ children }) {
 	return (

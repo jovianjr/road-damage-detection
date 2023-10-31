@@ -174,7 +174,7 @@ export default function DaftarRekaman() {
 									<div className="grid w-full grid-cols-1">
 										<Link
 											href={{
-												pathname: '/replay',
+												pathname: '/rekaman/detail/',
 												query: { name: 'test' },
 											}}
 										>
