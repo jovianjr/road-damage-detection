@@ -207,7 +207,10 @@ const LocationCard = ({
 			>
 				{location.data.map((val, idx) => {
 					return (
-						<label className="flex h-8 cursor-pointer items-center gap-2 px-2 hover:bg-slate-100">
+						<label
+							key={val.id}
+							className="flex h-8 cursor-pointer items-center gap-2 px-2 hover:bg-slate-100"
+						>
 							<span className="flex-grow"> {val.name}</span>
 							<input
 								type="checkbox"
