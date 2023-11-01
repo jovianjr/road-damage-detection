@@ -231,7 +231,7 @@ const headerTableContent = [
 	{ id: 2, icon: <AlignLeft />, name: 'Longitude' },
 	{ id: 3, icon: <AlignLeft />, name: 'Latitude' },
 	{ id: 4, icon: <AlertOctagon />, name: 'Total Kerusakan' },
-	{ id: 5, icon: <PlaySquare />, name: 'Data Video' },
+	{ id: 5, icon: <PlaySquare />, name: 'Jenis Kerusakan' },
 	{ id: 6, icon: <List />, name: 'Detail' },
 ]
 
@@ -281,7 +281,7 @@ export default function Replay({ params }) {
 	const handleClickEdit = () => {
 		setFormEdit((prev) => ({
 			...prev,
-			id: 1,
+			id: roadId,
 			title: roadData.data.title,
 			location: roadData.data.locations,
 		}))

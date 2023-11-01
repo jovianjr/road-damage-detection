@@ -29,10 +29,15 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 	const updateData = useMutation(
 		{
 			mutationKey: ['update-data'],
-			mutationFn: (data) =>
-				updateRoad({ id: formEdit.id, locations: formEdit.locations }),
-			onSuccess: () => {
-				queryClient.invalidateQueries(['road-by-id', roadId])
+			mutationFn: () =>
+				updateRoad({
+					id: formEdit.id,
+					title: formEdit.title,
+					locations: formEdit.locations,
+				}),
+			onSuccess: (res) => {
+				queryClient.invalidateQueries(['road-by-id', formEdit.id])
+				console.log(res)
 				onClose()
 			},
 		},
