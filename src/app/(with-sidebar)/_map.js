@@ -1,8 +1,14 @@
 'use client'
 import 'leaflet/dist/leaflet.css'
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet'
+import {
+	MapContainer,
+	Marker,
+	Popup,
+	TileLayer,
+	ZoomControl,
+} from 'react-leaflet'
 
-export default function Home() {
+export default function Home({ locationData = [] }) {
 	const initialPosition = [-2, 112]
 	return (
 		<MapContainer
@@ -16,6 +22,19 @@ export default function Home() {
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
 			<ZoomControl position="topright" />
+			{locationData.map((location) => {
+				if (!location.status) return
+				return location.data.map((data) => {
+					if (!data.status) return
+					return (
+						<Marker key={`marker-${data.id}`} position={data.location}>
+							<Popup>
+								A pretty CSS3 popup. <br /> Easily customizable.
+							</Popup>
+						</Marker>
+					)
+				})
+			})}
 		</MapContainer>
 	)
 }

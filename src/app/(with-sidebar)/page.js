@@ -16,21 +16,25 @@ const data = [
 				id: 'no-1-1',
 				name: 'Jawa Barat 1',
 				status: 1,
+				location: [-7.04, 107.47],
 			},
 			{
 				id: 'no-1-2',
 				name: 'Jawa Barat 2',
-				status: 0,
+				status: 1,
+				location: [-7.44, 108.47],
 			},
 			{
 				id: 'no-1-3',
 				name: 'Jawa Barat 3',
 				status: 0,
+				location: [-7.34, 107.47],
 			},
 			{
 				id: 'no-1-4',
 				name: 'Jawa Barat 4',
 				status: 1,
+				location: [-7.24, 108.47],
 			},
 		],
 	},
@@ -41,13 +45,15 @@ const data = [
 		data: [
 			{
 				id: 'no-2-1',
-				name: 'Jawa Barat 1',
+				name: 'DI Yogyakarta 1',
 				status: 1,
+				location: [-7.74, 110.47],
 			},
 			{
 				id: 'no-2-2',
-				name: 'Jawa Barat 2',
+				name: 'DI Yogyakarta 2',
 				status: 1,
+				location: [-7.84, 110.07],
 			},
 		],
 	},
@@ -60,31 +66,37 @@ const data = [
 				id: 'no-3-1',
 				name: 'Kalimantan Timur 1',
 				status: 1,
+				location: [-1.54, 112.47],
 			},
 			{
 				id: 'no-3-2',
 				name: 'Kalimantan Timur 2',
 				status: 0,
+				location: [-1, 117],
 			},
 			{
 				id: 'no-3-3',
 				name: 'Kalimantan Timur 3',
 				status: 0,
+				location: [-0.8, 117.25],
 			},
 			{
 				id: 'no-3-4',
 				name: 'Kalimantan Timur 4',
-				status: 0,
+				status: 1,
+				location: [-1.54, 110.47],
 			},
 			{
 				id: 'no-3-5',
 				name: 'Kalimantan Timur 5',
-				status: 0,
+				status: 1,
+				location: [-1.74, 115.47],
 			},
 			{
 				id: 'no-3-6',
 				name: 'Kalimantan Timur 6',
 				status: 0,
+				location: [-1.74, 110.47],
 			},
 		],
 	},
@@ -130,7 +142,7 @@ export default function Home() {
 				</div>
 			</div>
 			<div className="h-full flex-grow bg-white">
-				<Map />
+				<Map locationData={currentData} />
 			</div>
 		</main>
 	)
