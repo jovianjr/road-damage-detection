@@ -23,104 +23,31 @@ const headerTableContent = [
 	{ id: 6, icon: <List />, name: 'Detail' },
 ]
 
-export default function DaftarRekaman() {
-	const dummyData = [
-		{
-			id: 1,
-			date: '08/10/2023',
-			title: 'Jl Gamping',
-			totalKerusakan: 13,
-			videoData: [
-				{
-					id: 1,
-					text: 'Video',
-				},
-				{
-					id: 2,
-					text: 'Lokasi',
-				},
-			],
-		},
-		{
-			id: 2,
-			date: '02/10/2023',
-			title: 'Maguwoharjo',
-			totalKerusakan: 7,
-			videoData: [
-				{
-					id: 1,
-					text: 'Video',
-				},
-			],
-		},
-		{
-			id: 3,
-			date: '12/09/2023',
-			title: 'Parangkritis',
-			totalKerusakan: 32,
-			videoData: [
-				{
-					id: 1,
-					text: 'Video',
-				},
-				{
-					id: 2,
-					text: 'Lokasi',
-				},
-			],
-		},
-		{
-			id: 4,
-			date: '23/07/2023',
-			title: 'Jl Pramuka',
-			totalKerusakan: 6,
-			videoData: [
-				{
-					id: 1,
-					text: 'Video',
-				},
-			],
-		},
-		{
-			id: 5,
-			date: '31/02/2022',
-			title: 'Jl Monjali',
-			totalKerusakan: 2,
-			videoData: [
-				{
-					id: 1,
-					text: 'Video',
-				},
-			],
-		},
-		{
-			id: 6,
-			date: '17/02/2022',
-			title: 'Kauman',
-			totalKerusakan: 19,
-			videoData: [
-				{
-					id: 1,
-					text: 'Video',
-				},
-				{ id: 2, text: 'Lokasi' },
-			],
-		},
-		{
-			id: 7,
-			date: '05/01/2022',
-			title: 'Babarsari',
-			totalKerusakan: 5,
-			videoData: [
-				{
-					id: 1,
-					text: 'Video',
-				},
-				{ id: 2, text: 'Lokasi' },
-			],
-		},
+const convertTime = (inputTimestamp) => {
+	const date = new Date(inputTimestamp)
+	const monthName = [
+		'Januari',
+		'Februari',
+		'Maret',
+		'April',
+		'Mei',
+		'Juni',
+		'Juli',
+		'Agustus',
+		'September',
+		'Oktober',
+		'November',
+		'Desember',
 	]
+	const day = date.getDate()
+	const month = monthName[date.getMonth()]
+	const year = date.getFullYear()
 
+	const formattedTime = `${day} ${month} ${year}`
+	return formattedTime
+}
+
+export default function DaftarRekaman() {
 	const {
 		isLoading: roadListIsLoading,
 		isError: roadListIsError,
@@ -170,13 +97,13 @@ export default function DaftarRekaman() {
 							roadList?.data?.map((item, index) => (
 								<tr key={index}>
 									<td className="border-r py-2 text-center md:py-4">
-										{item.date}
+										{convertTime(item.createdAt)}
 									</td>
 									<td className="border-r py-2 text-center md:py-4">
 										{item.title}
 									</td>
 									<td className="border-r py-2 text-center md:py-4">
-										{item.totalKerusakan}
+										{item.detectionMeta.totalDamage}
 									</td>
 									<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
 										{item.videoData?.map((data, index) => {
