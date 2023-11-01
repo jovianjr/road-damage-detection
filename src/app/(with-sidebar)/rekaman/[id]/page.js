@@ -16,6 +16,7 @@ import {
 
 import FramePopup from '@/app/(with-sidebar)/rekaman/[id]/_framePopup'
 import EditPopup from '@/app/(with-sidebar)/rekaman/[id]/_editPopup'
+import DeletePopup from '@/app/(with-sidebar)/rekaman/[id]/_deletePopup'
 import IconComponent from '@/app/components/IconComponents'
 import { useQuery } from 'react-query'
 import { getRoadById } from '@/utils/services/road'
@@ -247,6 +248,7 @@ export default function Replay({ params }) {
 		jenisKerusakan: [],
 	})
 	const [formEdit, setFormEdit] = useState(null)
+	const [isDeleting, setIsDeleting] = useState(false)
 
 	const roadId = params.id
 
@@ -285,6 +287,10 @@ export default function Replay({ params }) {
 			title: roadData?.data.title,
 			location: roadData?.data.locations,
 		}))
+	}
+
+	const handleClickDelete = () => {
+		setIsDeleting(true)
 	}
 
 	useEffect(() => {
@@ -340,7 +346,7 @@ export default function Replay({ params }) {
 		},
 		{ id: 2, icon: <Map />, name: 'Lihat Peta', action: null },
 		{ id: 3, icon: <Pencil />, name: 'Edit', action: handleClickEdit },
-		{ id: 4, icon: <Trash />, name: 'Hapus', action: null },
+		{ id: 4, icon: <Trash />, name: 'Hapus', action: handleClickDelete },
 	]
 
 	return (
@@ -358,6 +364,12 @@ export default function Replay({ params }) {
 								title: e.target.value,
 							}))
 						}
+					/>
+					<DeletePopup
+						isDeleting={isDeleting}
+						idData={roadData.data._id}
+						titleData={roadData.data.title}
+						onClose={() => setIsDeleting(false)}
 					/>
 					<FramePopup
 						frameDataUrl={frameDataUrl}
