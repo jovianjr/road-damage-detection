@@ -5,6 +5,11 @@ export const getAllRoad = async () => {
 	return response.data
 }
 
+export const getRoadById = async ({ id = null }) => {
+	const response = await axios.get(`/api/roads/${id}`)
+	return response.data
+}
+
 export const createRoad = async ({ title = '', url = '' }) => {
 	const response = await axios.post(`/api/roads`, {
 		title: title,

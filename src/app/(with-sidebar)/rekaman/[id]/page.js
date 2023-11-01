@@ -16,6 +16,9 @@ import {
 
 import FramePopup from '@/app/(with-sidebar)/rekaman/[id]/_framePopup'
 import IconComponent from '@/app/components/IconComponents'
+import { useQuery } from 'react-query'
+import { getRoadById } from '@/utils/services/road'
+
 import clsx from 'clsx'
 
 const dummyData = [
@@ -238,7 +241,7 @@ const headerTableContent = [
 	{ id: 6, icon: <List />, name: 'Detail' },
 ]
 
-export default function Replay() {
+export default function Replay({ params }) {
 	const videoFile = '/example-video.mp4'
 	const vidRef = useRef(null)
 	const [frameDataUrl, setFrameDataUrl] = useState(null)
@@ -248,6 +251,19 @@ export default function Replay() {
 		secs: 0,
 		holes: 0,
 		jenisKerusakan: [],
+	})
+
+	const roadId = params.id
+
+	const {
+		isLoading: roadDataIsLoading,
+		isError: roadDataIsError,
+		data: roadData,
+		isFetching: roadDataIsFetching,
+	} = useQuery({
+		refetchOnWindowFocus: false,
+		queryKey: ['road-by-id', roadId],
+		queryFn: () => getRoadById({ id: roadId }),
 	})
 
 	const handleSeeFrameClick = (frameItem) => {
@@ -296,7 +312,7 @@ export default function Replay() {
 			}
 		}
 
-		if (!!vidRef.current) {
+		if (!!vidRef.current && !roadDataIsLoading) {
 			vidRef.current.addEventListener('seeked', handleSeeked)
 		}
 
@@ -305,116 +321,127 @@ export default function Replay() {
 				vidRef.current.removeEventListener('seeked', handleSeeked)
 			}
 		}
-	}, [])
+	}, [roadDataIsLoading])
 
 	return (
 		<div className="min-h-screen w-full bg-[#fff] pt-24 text-2xl text-black">
-			<FramePopup
-				frameDataUrl={frameDataUrl}
-				onClose={() => setFrameDataUrl()}
-				{...activeFrame}
-			/>
-			<div className="container mx-auto w-[831px]">
-				<div className="w-full">
-					<video
-						muted
-						controls
-						src={videoFile}
-						id="video-player"
-						ref={vidRef}
-						className="rounded-2xl"
+			{roadDataIsLoading || roadDataIsFetching ? (
+				<p className="w-full text-center">Loading...</p>
+			) : (
+				<>
+					<FramePopup
+						frameDataUrl={frameDataUrl}
+						onClose={() => setFrameDataUrl()}
+						{...activeFrame}
 					/>
-				</div>
-				<div className="mt-12 flex w-full items-center gap-5">
-					<div className="w-full px-6 py-3">{videoFile}</div>
-					<div className="grid w-1/2 grid-cols-4">
-						{icons.map((item) => {
-							return (
-								<IconComponent
-									icon={item.icon}
-									name={item.name}
-									key={item.id}
-								/>
-							)
-						})}
+					<div className="container mx-auto w-[831px]">
+						<div className="w-full">
+							<video
+								muted
+								controls
+								src={videoFile}
+								id="video-player"
+								ref={vidRef}
+								className="w-full rounded-2xl"
+							/>
+						</div>
+						<div className="mt-12 flex w-full items-center gap-5">
+							<div className="w-full px-6 py-3">
+								{roadData?.data.title || videoFile}
+							</div>
+							<div className="grid w-1/2 grid-cols-4">
+								{icons.map((item) => {
+									return (
+										<IconComponent
+											icon={item.icon}
+											name={item.name}
+											key={item.id}
+										/>
+									)
+								})}
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
 
-			<div className="container mx-auto px-32 py-16">
-				<table className="w-full bg-white text-lg font-medium md:text-xl">
-					<thead className="">
-						<tr>
-							{headerTableContent.map((item) => {
-								return (
-									<td
-										className={clsx(
-											'border-b py-2 text-center md:py-4',
-											item !== headerTableContent[headerTableContent.length - 1]
-												? 'border-r'
-												: ''
-										)}
-										key={item.id}
-									>
-										<div className="flex items-center justify-center gap-4">
-											{item.icon}
-											<p>{item.name}</p>
-										</div>
-									</td>
-								)
-							})}
-						</tr>
-					</thead>
-
-					<tbody>
-						{dummyData?.length !== 0 ? (
-							dummyData.map((item) => (
-								<tr key={item.id}>
-									<td className="border-r py-2 text-center md:py-4">
-										{item.duration}
-									</td>
-									<td className="py-2 text-center md:py-4">{item.latitude}</td>
-									<td className="border-r py-2 text-center md:py-4">
-										{item.longitude}
-									</td>
-									<td className="border-r py-2 text-center md:py-4">
-										{item.totalKerusakan}
-									</td>
-									<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
-										{item.videoData.map((data) => {
-											return (
-												<div
-													className="rounded-lg bg-pink-300 px-2.5 py-1 text-lg"
-													key={data.id}
-												>
-													{data.text}
+					<div className="container mx-auto px-32 py-16">
+						<table className="w-full bg-white text-lg font-medium md:text-xl">
+							<thead className="">
+								<tr>
+									{headerTableContent.map((item) => {
+										return (
+											<td
+												className={clsx(
+													'border-b py-2 text-center md:py-4',
+													item !==
+														headerTableContent[headerTableContent.length - 1]
+														? 'border-r'
+														: ''
+												)}
+												key={item.id}
+											>
+												<div className="flex items-center justify-center gap-4">
+													{item.icon}
+													<p>{item.name}</p>
 												</div>
-											)
-										})}
-									</td>
-									<td className="px-3 py-2 text-center md:py-4">
-										<div className="grid w-full grid-cols-1">
-											<IconComponent
-												onClick={() => {
-													handleSeeFrameClick(item)
-												}}
-												icon={<Eye />}
-												name="Lihat Frame"
-											/>
-										</div>
-									</td>
+											</td>
+										)
+									})}
 								</tr>
-							))
-						) : (
-							<tr>
-								<td className="py-2 text-center text-xl italic md:py-4">
-									No data found
-								</td>
-							</tr>
-						)}
-					</tbody>
-				</table>
-			</div>
+							</thead>
+
+							<tbody>
+								{dummyData?.length !== 0 ? (
+									dummyData.map((item) => (
+										<tr key={item.id}>
+											<td className="border-r py-2 text-center md:py-4">
+												{item.duration}
+											</td>
+											<td className="py-2 text-center md:py-4">
+												{item.latitude}
+											</td>
+											<td className="border-r py-2 text-center md:py-4">
+												{item.longitude}
+											</td>
+											<td className="border-r py-2 text-center md:py-4">
+												{item.totalKerusakan}
+											</td>
+											<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
+												{item.videoData.map((data) => {
+													return (
+														<div
+															className="rounded-lg bg-pink-300 px-2.5 py-1 text-lg"
+															key={data.id}
+														>
+															{data.text}
+														</div>
+													)
+												})}
+											</td>
+											<td className="px-3 py-2 text-center md:py-4">
+												<div className="grid w-full grid-cols-1">
+													<IconComponent
+														onClick={() => {
+															handleSeeFrameClick(item)
+														}}
+														icon={<Eye />}
+														name="Lihat Frame"
+													/>
+												</div>
+											</td>
+										</tr>
+									))
+								) : (
+									<tr>
+										<td className="py-2 text-center text-xl italic md:py-4">
+											No data found
+										</td>
+									</tr>
+								)}
+							</tbody>
+						</table>
+					</div>
+				</>
+			)}
 		</div>
 	)
 }

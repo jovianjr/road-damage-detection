@@ -134,7 +134,9 @@ export default function DaftarRekaman() {
 
 	return (
 		<div className="mt-16 flex min-h-screen w-full flex-col items-center justify-start bg-[#fff] text-black">
-			<h1 className="mb-8 w-3/4 text-left text-2xl">Daftar Rekaman</h1>
+			<h1 className="mb-8 w-3/4 text-left text-2xl font-semibold">
+				Daftar Rekaman
+			</h1>
 
 			{roadListIsLoading || roadListIsFetching ? (
 				<p>loading</p>
