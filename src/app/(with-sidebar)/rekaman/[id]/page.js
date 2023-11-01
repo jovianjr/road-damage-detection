@@ -282,8 +282,8 @@ export default function Replay({ params }) {
 		setFormEdit((prev) => ({
 			...prev,
 			id: roadId,
-			title: roadData.data.title,
-			location: roadData.data.locations,
+			title: roadData?.data.title,
+			location: roadData?.data.locations,
 		}))
 	}
 
@@ -393,6 +393,7 @@ export default function Replay({ params }) {
 							</div>
 						</div>
 					</div>
+
 					<div className="container mx-auto py-16">
 						<table className="w-full bg-white text-lg font-medium md:text-xl">
 							<thead className="">
@@ -420,23 +421,23 @@ export default function Replay({ params }) {
 							</thead>
 
 							<tbody>
-								{dummyData?.length !== 0 ? (
-									dummyData.map((item) => (
-										<tr key={item.id}>
+								{roadData?.data.detection?.length !== 0 ? (
+									roadData?.data.detection?.map((item) => (
+										<tr key={item._id}>
 											<td className="border-r py-2 text-center md:py-4">
-												{item.duration}
+												"Test"
 											</td>
 											<td className="py-2 text-center md:py-4">
-												{item.latitude}
+												{item.location.latitude}
 											</td>
 											<td className="border-r py-2 text-center md:py-4">
-												{item.longitude}
+												{item.location.longitude}
 											</td>
 											<td className="border-r py-2 text-center md:py-4">
-												{item.totalKerusakan}
+												"Test"
 											</td>
 											<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
-												{item.videoData.map((data) => {
+												{/* {item.videoData.map((data) => {
 													return (
 														<div
 															className="rounded-lg bg-pink-300 px-2.5 py-1 text-lg"
@@ -445,7 +446,8 @@ export default function Replay({ params }) {
 															{data.text}
 														</div>
 													)
-												})}
+												})} */}
+												"Test"
 											</td>
 											<td className="px-3 py-2 text-center md:py-4">
 												<div className="grid w-full grid-cols-1">

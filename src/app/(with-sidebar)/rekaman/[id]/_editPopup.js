@@ -2,29 +2,15 @@ import clsx from 'clsx'
 import { X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
+import Button from '@/app/components/button'
 import { useMutation, useQueryClient } from 'react-query'
 import UploadFile from '@/app/components/uploadFile'
 import Popup from '@/app/components/popup'
 
-import { updateRoad } from '@/utils/services/road'
+import { updateRoad, updateRoadLocationByCSV } from '@/utils/services/road'
 
 const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
-	// const boxRef2 = useRef(null)
-
-	// useEffect(() => {
-	// 	const handleClickOutside = (event) => {
-	// 		if (boxRef2.current && !boxRef2.current.contains(event.target)) {
-	// 			onClose()
-	// 		}
-	// 	}
-
-	// 	document.addEventListener('click', handleClickOutside)
-
-	// 	return () => {
-	// 		document.removeEventListener('click', handleClickOutside)
-	// 	}
-	// }, [boxRef2])
-
+	const [fileCSV, setFileCSV] = useState()
 	const queryClient = useQueryClient()
 	const updateData = useMutation(
 		{
@@ -36,13 +22,30 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 					locations: formEdit.locations,
 				}),
 			onSuccess: (res) => {
-				queryClient.invalidateQueries(['road-by-id', formEdit.id])
-				console.log(res)
-				onClose()
+				// queryClient.invalidateQueries(['road-by-id', formEdit.id])
+				// onClose()
+				if (fileCSV) updateLocWithCsv.mutateAsync(res.data)
 			},
 		},
 		{}
 	)
+
+	const updateLocWithCsv = useMutation({
+		mutationKey: ['update-location-csv'],
+		mutationFn: (data) => {
+			console.log('Updateing loc with csv')
+			const formData = new FormData()
+			formData.append('csv', fileCSV)
+			return updateRoadLocationByCSV({
+				id: data._id,
+				formData: formData,
+			})
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries(['road-by-id', formEdit.id])
+			onClose()
+		},
+	})
 
 	return (
 		<div
@@ -74,23 +77,19 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 						title="Update file lokasi baru"
 						name="location"
 						className="!h-[250px]"
-						// onChange={setFileCSV}
-						// disabled={
-						// 	saveChanges.isLoading ||
-						// }
+						onChange={setFileCSV}
+						disabled={updateData.isLoading}
 						type="csv"
 					></UploadFile>
 
-					<div className="mx-auto mt-4">
-						<div
-							className="transform cursor-pointer rounded-lg border bg-c-yellow px-4 py-1 text-lg font-semibold font-semibold text-c-blue transition duration-300 hover:scale-105"
-							onClick={() => {
-								updateData.mutateAsync()
-							}}
-						>
-							Simpan
-						</div>
-					</div>
+					<Button
+						loading={updateData.isLoading}
+						onClick={() => {
+							updateData.mutateAsync()
+						}}
+						text="Simpan"
+						className="mx-auto mt-4 w-fit py-2"
+					/>
 				</div>
 			</div>
 		</div>
