@@ -18,6 +18,11 @@ export const createRoad = async ({ title = '', url = '' }) => {
 	return response.data
 }
 
+export const deleteRoad = async ({ id = null }) => {
+	const response = await axios.delete(`/api/roads/${id}`)
+	return response.data
+}
+
 export const updateRoad = async ({
 	id = null,
 	title = null,

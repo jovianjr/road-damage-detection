@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 
 import FramePopup from '@/app/(with-sidebar)/rekaman/[id]/_framePopup'
+import EditPopup from '@/app/(with-sidebar)/rekaman/[id]/_editPopup'
 import IconComponent from '@/app/components/IconComponents'
 import { useQuery } from 'react-query'
 import { getRoadById } from '@/utils/services/road'
@@ -225,13 +226,6 @@ const dummyData = [
 	},
 ]
 
-const icons = [
-	{ id: 1, icon: <TableProperties />, name: 'Lihat Tabel' },
-	{ id: 2, icon: <Map />, name: 'Lihat Peta' },
-	{ id: 3, icon: <Pencil />, name: 'Edit' },
-	{ id: 4, icon: <Trash />, name: 'Hapus' },
-]
-
 const headerTableContent = [
 	{ id: 1, icon: <Clock />, name: 'Durasi Video' },
 	{ id: 2, icon: <AlignLeft />, name: 'Longitude' },
@@ -252,6 +246,7 @@ export default function Replay({ params }) {
 		holes: 0,
 		jenisKerusakan: [],
 	})
+	const [formEdit, setFormEdit] = useState(null)
 
 	const roadId = params.id
 
@@ -281,6 +276,15 @@ export default function Replay({ params }) {
 			vidRef.current.isclick = true
 			vidRef.current.activePrediction = frameItem.prediction
 		}
+	}
+
+	const handleClickEdit = () => {
+		setFormEdit((prev) => ({
+			...prev,
+			id: 1,
+			title: roadData.data.title,
+			location: roadData.data.locations,
+		}))
 	}
 
 	useEffect(() => {
@@ -323,12 +327,38 @@ export default function Replay({ params }) {
 		}
 	}, [roadDataIsLoading])
 
+	useEffect(() => {
+		console.log(formEdit)
+	}, [formEdit])
+
+	const icons = [
+		{
+			id: 1,
+			icon: <TableProperties />,
+			name: 'Lihat Tabel',
+			action: null,
+		},
+		{ id: 2, icon: <Map />, name: 'Lihat Peta', action: null },
+		{ id: 3, icon: <Pencil />, name: 'Edit', action: handleClickEdit },
+		{ id: 4, icon: <Trash />, name: 'Hapus', action: null },
+	]
+
 	return (
-		<div className="min-h-screen w-full bg-[#fff] pt-24 text-2xl text-black">
+		<div className="min-h-screen w-full bg-[#fff] pt-24 text-black">
 			{roadDataIsLoading || roadDataIsFetching ? (
 				<p className="w-full text-center">Loading...</p>
 			) : (
 				<>
+					<EditPopup
+						formEdit={formEdit}
+						onClose={() => setFormEdit()}
+						handleChangeTitle={(e) =>
+							setFormEdit((prev) => ({
+								...prev,
+								title: e.target.value,
+							}))
+						}
+					/>
 					<FramePopup
 						frameDataUrl={frameDataUrl}
 						onClose={() => setFrameDataUrl()}
@@ -346,7 +376,7 @@ export default function Replay({ params }) {
 							/>
 						</div>
 						<div className="mt-12 flex w-full items-center gap-5">
-							<div className="w-full px-6 py-3">
+							<div className="w-full px-6 py-3 text-2xl">
 								{roadData?.data.title || videoFile}
 							</div>
 							<div className="grid w-1/2 grid-cols-4">
@@ -355,6 +385,7 @@ export default function Replay({ params }) {
 										<IconComponent
 											icon={item.icon}
 											name={item.name}
+											onClick={item.action}
 											key={item.id}
 										/>
 									)
@@ -362,8 +393,7 @@ export default function Replay({ params }) {
 							</div>
 						</div>
 					</div>
-
-					<div className="container mx-auto px-32 py-16">
+					<div className="container mx-auto py-16">
 						<table className="w-full bg-white text-lg font-medium md:text-xl">
 							<thead className="">
 								<tr>
