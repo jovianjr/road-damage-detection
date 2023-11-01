@@ -1,11 +1,10 @@
 import clsx from 'clsx'
 import { X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
 import Button from '@/app/components/button'
 import { useMutation, useQueryClient } from 'react-query'
 import UploadFile from '@/app/components/uploadFile'
-import Popup from '@/app/components/popup'
 
 import { updateRoad, updateRoadLocationByCSV } from '@/utils/services/road'
 
@@ -22,8 +21,6 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 					locations: formEdit.locations,
 				}),
 			onSuccess: (res) => {
-				// queryClient.invalidateQueries(['road-by-id', formEdit.id])
-				// onClose()
 				if (fileCSV) updateLocWithCsv.mutateAsync(res.data)
 			},
 		},
