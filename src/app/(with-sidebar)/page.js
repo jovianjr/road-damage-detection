@@ -106,27 +106,59 @@ const data = [
 ]
 
 export default function Home() {
-	const {
-		isLoading: mapDataIsLoading,
-		isError: mapDataIsError,
-		data: mapData,
-		isFetching: mapDataIsFetching,
-	} = useQuery({
-		refetchOnWindowFocus: false,
-		queryKey: ['all-map-data'],
-		queryFn: () =>
-			getAllRoad({
-				locations: 1,
-				detection: 1,
-			}),
-	})
-
 	const [showPanel, setShowPanel] = useState(false)
 	const [currentData, setCurrentData] = useState(data)
 
-	useEffect(() => {
-		console.log(mapData)
-	}, [mapData])
+	const { isLoading: mapDataIsLoading, isFetching: mapDataIsFetching } =
+		useQuery({
+			refetchOnWindowFocus: false,
+			queryKey: ['all-map-data'],
+			queryFn: () =>
+				getAllRoad({
+					locations: 1,
+					detection: 1,
+				}),
+			onSuccess: (res) => {
+				const arrayLocation = []
+				res.data.forEach((data) => {
+					const dataKerusakan = []
+					data.detections.forEach((detection) => {
+						if (!detection.location) return
+
+						detection.predictions.forEach((predict) => {
+							let foundKerusakan = dataKerusakan.find(
+								(o) => o.name === predict.class
+							)
+							if (!foundKerusakan) {
+								dataKerusakan.push({
+									id: detection._id,
+									name: predict.class,
+									data: [],
+									status: 1,
+								})
+							} else {
+								let foundlocation = foundKerusakan.data.find(
+									(o) =>
+										o.latitude === detection.location.latitude &&
+										o.longitude === detection.location.longitude
+								)
+								if (!foundlocation) foundKerusakan.data.push(detection.location)
+							}
+						})
+					})
+
+					if (dataKerusakan.length > 0) {
+						arrayLocation.push({
+							id: data._id,
+							name: data.title,
+							status: 1,
+							data: dataKerusakan,
+						})
+					}
+				})
+				setCurrentData(arrayLocation)
+			},
+		})
 
 	return (
 		<main className="relative flex h-screen min-h-screen items-center justify-between">
