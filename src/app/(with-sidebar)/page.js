@@ -134,7 +134,7 @@ export default function Home() {
 									id: detection._id,
 									name: predict.class,
 									data: [],
-									status: 1,
+									status: 0,
 								})
 							} else {
 								let foundlocation = foundKerusakan.data.find(
@@ -151,7 +151,7 @@ export default function Home() {
 						arrayLocation.push({
 							id: data._id,
 							name: data.title,
-							status: 1,
+							status: 0,
 							data: dataKerusakan,
 						})
 					}
