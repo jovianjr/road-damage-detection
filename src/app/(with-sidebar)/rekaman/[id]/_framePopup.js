@@ -13,16 +13,17 @@ const FramePopup = ({
 }) => {
 	const boxRef = useRef(null)
 	const [jenisKerusakanMap, setJenisKerusakanMap] = useState(new Map())
+	const [time, setTime] = useState()
 
-	const convertSecsToTimestamp = (secs) => {
+	useEffect(() => {
 		const mins = Math.floor(secs / 60)
 		const remainingSecs = secs % 60
 
 		const mm = String(mins).padStart(2, '0')
 		const ss = String(remainingSecs).padStart(2, '0')
 
-		return `${mm}:${ss}`
-	}
+		setTime(`${mm}:${ss}`)
+	}, [secs])
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
@@ -41,7 +42,7 @@ const FramePopup = ({
 	useEffect(() => {
 		const newJenisKerusakanMap = new Map()
 		jenisKerusakan?.forEach((element) => {
-			const { text } = element
+			const { class: text } = element
 			if (newJenisKerusakanMap.has(text)) {
 				newJenisKerusakanMap.set(text, newJenisKerusakanMap.get(text) + 1)
 			} else {
@@ -88,9 +89,7 @@ const FramePopup = ({
 							<p>
 								{lat}, {long}
 							</p>
-							<p className="text-xl font-semibold">
-								{convertSecsToTimestamp(secs)}
-							</p>
+							<p className="text-xl font-semibold">{time}</p>
 						</div>
 					</div>
 				</div>
