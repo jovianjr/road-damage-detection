@@ -266,17 +266,17 @@ export default function Replay({ params }) {
 	const handleSeeFrameClick = (frameItem) => {
 		setActiveFrame((prev) => ({
 			...prev,
-			lat: frameItem.latitude,
-			long: frameItem.longitude,
-			secs: frameItem.duration,
-			holes: frameItem.totalKerusakan,
-			jenisKerusakan: frameItem.videoData,
+			lat: frameItem.location.latitude,
+			long: frameItem.location.longitude,
+			secs: frameItem.time,
+			holes: frameItem.predictions.length,
+			jenisKerusakan: frameItem.predictions,
 		}))
 
 		if (vidRef.current) {
-			vidRef.current.currentTime = frameItem.duration
+			vidRef.current.currentTime = frameItem.time.toFixed(2) ?? 0
 			vidRef.current.isclick = true
-			vidRef.current.activePrediction = frameItem.prediction
+			vidRef.current.activePrediction = frameItem.predictions
 		}
 	}
 
@@ -316,8 +316,10 @@ export default function Replay({ params }) {
 					context.strokeRect(rectX, rectY, rectWidth, rectHeight)
 				})
 
-				const frameData = canvas.toDataURL()
-				setFrameDataUrl(frameData)
+				if (canvas) {
+					const frameData = canvas.toDataURL()
+					setFrameDataUrl(frameData)
+				}
 				vidRef.current.isclick = false
 			}
 		}
@@ -381,15 +383,16 @@ export default function Replay({ params }) {
 							<video
 								muted
 								controls
-								src={videoFile}
+								src={roadData.data.videoUrl}
 								id="video-player"
 								ref={vidRef}
 								className="w-full rounded-2xl"
+								crossorigin="anonymous"
 							/>
 						</div>
 						<div className="mt-12 flex w-full items-center gap-5">
 							<div className="w-full px-6 py-3 text-2xl">
-								{roadData?.data.title || videoFile}
+								{roadData?.data.title}
 							</div>
 							<div className="grid w-1/2 grid-cols-4">
 								{icons.map((item) => {
@@ -433,11 +436,11 @@ export default function Replay({ params }) {
 							</thead>
 
 							<tbody>
-								{roadData?.data.detection?.length !== 0 ? (
-									roadData?.data.detection?.map((item) => (
+								{roadData?.data.detections?.length !== 0 ? (
+									roadData?.data.detections?.map((item) => (
 										<tr key={item._id}>
 											<td className="border-r py-2 text-center md:py-4">
-												"Test"
+												{item.time.toFixed(2)}
 											</td>
 											<td className="py-2 text-center md:py-4">
 												{item.location.latitude}
@@ -446,20 +449,19 @@ export default function Replay({ params }) {
 												{item.location.longitude}
 											</td>
 											<td className="border-r py-2 text-center md:py-4">
-												"Test"
+												{item.predictions.length}
 											</td>
 											<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
-												{/* {item.videoData.map((data) => {
+												{item.predictions.map((data) => {
 													return (
 														<div
 															className="rounded-lg bg-pink-300 px-2.5 py-1 text-lg"
-															key={data.id}
+															key={data.classId}
 														>
-															{data.text}
+															{data.class}
 														</div>
 													)
-												})} */}
-												"Test"
+												})}
 											</td>
 											<td className="px-3 py-2 text-center md:py-4">
 												<div className="grid w-full grid-cols-1">
