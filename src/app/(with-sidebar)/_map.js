@@ -24,15 +24,20 @@ export default function Home({ locationData = [] }) {
 			<ZoomControl position="topright" />
 			{locationData.map((location) => {
 				if (!location.status) return
-				return location.data.map((data) => {
-					if (!data.status) return
-					return (
-						<Marker key={`marker-${data.id}`} position={data.location}>
-							<Popup>
-								A pretty CSS3 popup. <br /> Easily customizable.
-							</Popup>
-						</Marker>
-					)
+				return location.data.map((kerusakan) => {
+					if (!kerusakan.status) return
+					return kerusakan.data.map((data) => {
+						return (
+							<Marker
+								key={`marker-${data.id}`}
+								position={[data.latitude, data.longitude]}
+							>
+								<Popup>
+									A pretty CSS3 popup. <br /> Easily customizable.
+								</Popup>
+							</Marker>
+						)
+					})
 				})
 			})}
 		</MapContainer>
