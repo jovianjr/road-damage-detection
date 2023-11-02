@@ -1,8 +1,11 @@
 'use client'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ChevronDown, Settings, XIcon } from 'lucide-react'
+
+import { useQuery } from 'react-query'
+import { getAllRoad } from '@/utils/services/road'
 
 const Map = dynamic(() => import('@/app/(with-sidebar)/_map'), { ssr: false })
 
@@ -103,8 +106,27 @@ const data = [
 ]
 
 export default function Home() {
+	const {
+		isLoading: mapDataIsLoading,
+		isError: mapDataIsError,
+		data: mapData,
+		isFetching: mapDataIsFetching,
+	} = useQuery({
+		refetchOnWindowFocus: false,
+		queryKey: ['all-map-data'],
+		queryFn: () =>
+			getAllRoad({
+				locations: 1,
+				detection: 1,
+			}),
+	})
+
 	const [showPanel, setShowPanel] = useState(false)
 	const [currentData, setCurrentData] = useState(data)
+
+	useEffect(() => {
+		console.log(mapData)
+	}, [mapData])
 
 	return (
 		<main className="relative flex h-screen min-h-screen items-center justify-between">
@@ -131,18 +153,32 @@ export default function Home() {
 				</div>
 				<h1 className="text-xl font-semibold">Pengaturan Label</h1>
 				<div className="flex flex-col gap-4">
-					{currentData.map((val, idx) => (
-						<LocationCard
-							location={val}
-							setCurrentData={setCurrentData}
-							key={val.id}
-							index={idx}
-						/>
-					))}
+					{mapDataIsLoading || mapDataIsFetching ? (
+						<p className="mx-auto">Memuat...</p>
+					) : (
+						<>
+							{currentData.map((val, idx) => (
+								<LocationCard
+									location={val}
+									setCurrentData={setCurrentData}
+									key={val.id}
+									index={idx}
+								/>
+							))}
+						</>
+					)}
 				</div>
 			</div>
 			<div className="h-full flex-grow bg-white">
-				<Map locationData={currentData} />
+				{mapDataIsLoading || mapDataIsFetching ? (
+					<p className="mt-24 h-full w-full text-center">
+						Memuat peta, harap tunggu...
+					</p>
+				) : (
+					<>
+						<Map locationData={currentData} />
+					</>
+				)}
 			</div>
 		</main>
 	)

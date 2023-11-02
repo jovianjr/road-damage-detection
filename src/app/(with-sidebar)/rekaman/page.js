@@ -56,7 +56,7 @@ export default function DaftarRekaman() {
 	} = useQuery({
 		refetchOnWindowFocus: false,
 		queryKey: ['all-road'],
-		queryFn: () => getAllRoad(),
+		queryFn: () => getAllRoad({}),
 	})
 
 	return (
@@ -66,7 +66,7 @@ export default function DaftarRekaman() {
 			</h1>
 
 			{roadListIsLoading || roadListIsFetching ? (
-				<p>loading</p>
+				<p>Memuat data...</p>
 			) : (
 				<table className="w-3/4 bg-white text-lg font-medium md:text-xl">
 					<thead>

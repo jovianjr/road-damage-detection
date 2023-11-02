@@ -387,7 +387,7 @@ export default function Replay({ params }) {
 								id="video-player"
 								ref={vidRef}
 								className="w-full rounded-2xl"
-								crossorigin="anonymous"
+								crossOrigin="anonymous"
 							/>
 						</div>
 						<div className="mt-12 flex w-full items-center gap-5">

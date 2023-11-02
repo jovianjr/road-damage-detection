@@ -1,7 +1,13 @@
 import axios from '@/utils/helpers/axios'
+import removeNullUndefinedField from '@/utils/helpers/removeNullUndefinedField'
 
-export const getAllRoad = async () => {
-	const response = await axios.get(`/api/roads`)
+export const getAllRoad = async ({ locations = null, detection = null }) => {
+	const params = {}
+	if (locations) params['withLocations'] = 1
+	if (detection) params['withDetections'] = 1
+	const cleanParams = removeNullUndefinedField(params)
+	const paramsURL = new URLSearchParams(cleanParams).toString()
+	const response = await axios.get(`/api/roads?${paramsURL}`)
 	return response.data
 }
 
