@@ -15,7 +15,12 @@ import {
 } from 'lucide-react'
 
 import FramePopup from '@/app/(with-sidebar)/rekaman/[id]/_framePopup'
+import EditPopup from '@/app/(with-sidebar)/rekaman/[id]/_editPopup'
+import DeletePopup from '@/app/(with-sidebar)/rekaman/[id]/_deletePopup'
 import IconComponent from '@/app/components/IconComponents'
+import { useQuery } from 'react-query'
+import { getRoadById } from '@/utils/services/road'
+
 import clsx from 'clsx'
 
 const dummyData = [
@@ -222,23 +227,16 @@ const dummyData = [
 	},
 ]
 
-const icons = [
-	{ id: 1, icon: <TableProperties />, name: 'Lihat Tabel' },
-	{ id: 2, icon: <Map />, name: 'Lihat Peta' },
-	{ id: 3, icon: <Pencil />, name: 'Edit' },
-	{ id: 4, icon: <Trash />, name: 'Hapus' },
-]
-
 const headerTableContent = [
 	{ id: 1, icon: <Clock />, name: 'Durasi Video' },
 	{ id: 2, icon: <AlignLeft />, name: 'Longitude' },
 	{ id: 3, icon: <AlignLeft />, name: 'Latitude' },
 	{ id: 4, icon: <AlertOctagon />, name: 'Total Kerusakan' },
-	{ id: 5, icon: <PlaySquare />, name: 'Data Video' },
+	{ id: 5, icon: <PlaySquare />, name: 'Jenis Kerusakan' },
 	{ id: 6, icon: <List />, name: 'Detail' },
 ]
 
-export default function Replay() {
+export default function Replay({ params }) {
 	const videoFile = '/example-video.mp4'
 	const vidRef = useRef(null)
 	const [frameDataUrl, setFrameDataUrl] = useState(null)
@@ -248,6 +246,21 @@ export default function Replay() {
 		secs: 0,
 		holes: 0,
 		jenisKerusakan: [],
+	})
+	const [formEdit, setFormEdit] = useState(null)
+	const [isDeleting, setIsDeleting] = useState(false)
+
+	const roadId = params.id
+
+	const {
+		isLoading: roadDataIsLoading,
+		isError: roadDataIsError,
+		data: roadData,
+		isFetching: roadDataIsFetching,
+	} = useQuery({
+		refetchOnWindowFocus: false,
+		queryKey: ['road-by-id', roadId],
+		queryFn: () => getRoadById({ id: roadId }),
 	})
 
 	const handleSeeFrameClick = (frameItem) => {
@@ -265,6 +278,19 @@ export default function Replay() {
 			vidRef.current.isclick = true
 			vidRef.current.activePrediction = frameItem.prediction
 		}
+	}
+
+	const handleClickEdit = () => {
+		setFormEdit((prev) => ({
+			...prev,
+			id: roadId,
+			title: roadData?.data.title,
+			location: roadData?.data.locations,
+		}))
+	}
+
+	const handleClickDelete = () => {
+		setIsDeleting(true)
 	}
 
 	useEffect(() => {
@@ -296,7 +322,7 @@ export default function Replay() {
 			}
 		}
 
-		if (!!vidRef.current) {
+		if (!!vidRef.current && !roadDataIsLoading) {
 			vidRef.current.addEventListener('seeked', handleSeeked)
 		}
 
@@ -305,116 +331,161 @@ export default function Replay() {
 				vidRef.current.removeEventListener('seeked', handleSeeked)
 			}
 		}
-	}, [])
+	}, [roadDataIsLoading])
+
+	useEffect(() => {
+		console.log(formEdit)
+	}, [formEdit])
+
+	const icons = [
+		{
+			id: 1,
+			icon: <TableProperties />,
+			name: 'Lihat Tabel',
+			action: null,
+		},
+		{ id: 2, icon: <Map />, name: 'Lihat Peta', action: null },
+		{ id: 3, icon: <Pencil />, name: 'Edit', action: handleClickEdit },
+		{ id: 4, icon: <Trash />, name: 'Hapus', action: handleClickDelete },
+	]
 
 	return (
-		<div className="min-h-screen w-full bg-[#fff] pt-24 text-2xl text-black">
-			<FramePopup
-				frameDataUrl={frameDataUrl}
-				onClose={() => setFrameDataUrl()}
-				{...activeFrame}
-			/>
-			<div className="container mx-auto w-[831px]">
-				<div className="w-full">
-					<video
-						muted
-						controls
-						src={videoFile}
-						id="video-player"
-						ref={vidRef}
-						className="rounded-2xl"
+		<div className="min-h-screen w-full bg-[#fff] pt-24 text-black">
+			{roadDataIsLoading || roadDataIsFetching ? (
+				<p className="w-full text-center">Loading...</p>
+			) : (
+				<>
+					<EditPopup
+						formEdit={formEdit}
+						onClose={() => setFormEdit()}
+						handleChangeTitle={(e) =>
+							setFormEdit((prev) => ({
+								...prev,
+								title: e.target.value,
+							}))
+						}
 					/>
-				</div>
-				<div className="mt-12 flex w-full items-center gap-5">
-					<div className="w-full px-6 py-3">{videoFile}</div>
-					<div className="grid w-1/2 grid-cols-4">
-						{icons.map((item) => {
-							return (
-								<IconComponent
-									icon={item.icon}
-									name={item.name}
-									key={item.id}
-								/>
-							)
-						})}
+					<DeletePopup
+						isDeleting={isDeleting}
+						idData={roadData.data._id}
+						titleData={roadData.data.title}
+						onClose={() => setIsDeleting(false)}
+					/>
+					<FramePopup
+						frameDataUrl={frameDataUrl}
+						onClose={() => setFrameDataUrl()}
+						{...activeFrame}
+					/>
+					<div className="container mx-auto w-[831px]">
+						<div className="w-full">
+							<video
+								muted
+								controls
+								src={videoFile}
+								id="video-player"
+								ref={vidRef}
+								className="w-full rounded-2xl"
+							/>
+						</div>
+						<div className="mt-12 flex w-full items-center gap-5">
+							<div className="w-full px-6 py-3 text-2xl">
+								{roadData?.data.title || videoFile}
+							</div>
+							<div className="grid w-1/2 grid-cols-4">
+								{icons.map((item) => {
+									return (
+										<IconComponent
+											icon={item.icon}
+											name={item.name}
+											onClick={item.action}
+											key={item.id}
+										/>
+									)
+								})}
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
 
-			<div className="container mx-auto px-32 py-16">
-				<table className="w-full bg-white text-lg font-medium md:text-xl">
-					<thead className="">
-						<tr>
-							{headerTableContent.map((item) => {
-								return (
-									<td
-										className={clsx(
-											'border-b py-2 text-center md:py-4',
-											item !== headerTableContent[headerTableContent.length - 1]
-												? 'border-r'
-												: ''
-										)}
-										key={item.id}
-									>
-										<div className="flex items-center justify-center gap-4">
-											{item.icon}
-											<p>{item.name}</p>
-										</div>
-									</td>
-								)
-							})}
-						</tr>
-					</thead>
-
-					<tbody>
-						{dummyData?.length !== 0 ? (
-							dummyData.map((item) => (
-								<tr key={item.id}>
-									<td className="border-r py-2 text-center md:py-4">
-										{item.duration}
-									</td>
-									<td className="py-2 text-center md:py-4">{item.latitude}</td>
-									<td className="border-r py-2 text-center md:py-4">
-										{item.longitude}
-									</td>
-									<td className="border-r py-2 text-center md:py-4">
-										{item.totalKerusakan}
-									</td>
-									<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
-										{item.videoData.map((data) => {
-											return (
-												<div
-													className="rounded-lg bg-pink-300 px-2.5 py-1 text-lg"
-													key={data.id}
-												>
-													{data.text}
+					<div className="container mx-auto py-16">
+						<table className="w-full bg-white text-lg font-medium md:text-xl">
+							<thead className="">
+								<tr>
+									{headerTableContent.map((item) => {
+										return (
+											<td
+												className={clsx(
+													'border-b py-2 text-center md:py-4',
+													item !==
+														headerTableContent[headerTableContent.length - 1]
+														? 'border-r'
+														: ''
+												)}
+												key={item.id}
+											>
+												<div className="flex items-center justify-center gap-4">
+													{item.icon}
+													<p>{item.name}</p>
 												</div>
-											)
-										})}
-									</td>
-									<td className="px-3 py-2 text-center md:py-4">
-										<div className="grid w-full grid-cols-1">
-											<IconComponent
-												onClick={() => {
-													handleSeeFrameClick(item)
-												}}
-												icon={<Eye />}
-												name="Lihat Frame"
-											/>
-										</div>
-									</td>
+											</td>
+										)
+									})}
 								</tr>
-							))
-						) : (
-							<tr>
-								<td className="py-2 text-center text-xl italic md:py-4">
-									No data found
-								</td>
-							</tr>
-						)}
-					</tbody>
-				</table>
-			</div>
+							</thead>
+
+							<tbody>
+								{roadData?.data.detection?.length !== 0 ? (
+									roadData?.data.detection?.map((item) => (
+										<tr key={item._id}>
+											<td className="border-r py-2 text-center md:py-4">
+												"Test"
+											</td>
+											<td className="py-2 text-center md:py-4">
+												{item.location.latitude}
+											</td>
+											<td className="border-r py-2 text-center md:py-4">
+												{item.location.longitude}
+											</td>
+											<td className="border-r py-2 text-center md:py-4">
+												"Test"
+											</td>
+											<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
+												{/* {item.videoData.map((data) => {
+													return (
+														<div
+															className="rounded-lg bg-pink-300 px-2.5 py-1 text-lg"
+															key={data.id}
+														>
+															{data.text}
+														</div>
+													)
+												})} */}
+												"Test"
+											</td>
+											<td className="px-3 py-2 text-center md:py-4">
+												<div className="grid w-full grid-cols-1">
+													<IconComponent
+														onClick={() => {
+															handleSeeFrameClick(item)
+														}}
+														icon={<Eye />}
+														name="Lihat Frame"
+													/>
+												</div>
+											</td>
+										</tr>
+									))
+								) : (
+									<tr>
+										<td className="py-2 text-center text-xl italic md:py-4">
+											No data found
+										</td>
+									</tr>
+								)}
+							</tbody>
+						</table>
+					</div>
+				</>
+			)}
 		</div>
 	)
 }
