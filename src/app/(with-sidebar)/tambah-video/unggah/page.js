@@ -34,6 +34,7 @@ export default function TambahVideo() {
 		mutationFn: (data) => createRoad({ title: title, url: data.url }),
 		onSuccess: (res) => {
 			if (fileCSV) updateVideo.mutateAsync(res.data)
+			else router.push(`/rekaman/${res.data._id}`)
 		},
 	})
 
