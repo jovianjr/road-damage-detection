@@ -9,7 +9,7 @@ import UploadFile from '@/app/components/uploadFile'
 import { updateRoad, updateRoadLocationByCSV } from '@/utils/services/road'
 
 const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
-	const [fileCSV, setFileCSV] = useState()
+	const [fileCSV, setFileCSV] = useState(null)
 	const queryClient = useQueryClient()
 	const updateData = useMutation(
 		{
@@ -21,7 +21,13 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 					locations: formEdit.locations,
 				}),
 			onSuccess: (res) => {
-				if (fileCSV) updateLocWithCsv.mutateAsync(res.data)
+				if (fileCSV !== null) {
+					console.log(fileCSV)
+					updateLocWithCsv.mutateAsync(res.data)
+				} else {
+					queryClient.invalidateQueries(['road-by-id', formEdit.id])
+					onClose()
+				}
 			},
 		},
 		{}
@@ -39,6 +45,11 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 			})
 		},
 		onSuccess: () => {
+			queryClient.invalidateQueries(['road-by-id', formEdit.id])
+			onClose()
+		},
+		onError: (error) => {
+			console.error('CSV update error:', error)
 			queryClient.invalidateQueries(['road-by-id', formEdit.id])
 			onClose()
 		},
