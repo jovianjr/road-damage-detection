@@ -9,6 +9,7 @@ const videoConstraints = {
 	width: 1080,
 	height: 640,
 	frameRate: { ideal: 15, max: 15 },
+	facingMode: { exact: 'environment' },
 }
 
 var contentTypes = [
