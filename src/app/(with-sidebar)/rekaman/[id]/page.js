@@ -266,8 +266,8 @@ export default function Replay({ params }) {
 	const handleSeeFrameClick = (frameItem) => {
 		setActiveFrame((prev) => ({
 			...prev,
-			lat: frameItem.location.latitude,
-			long: frameItem.location.longitude,
+			lat: frameItem?.location?.latitude,
+			long: frameItem?.location?.longitude,
 			secs: frameItem.time,
 			holes: frameItem.predictions.length,
 			jenisKerusakan: frameItem.predictions,
@@ -443,10 +443,10 @@ export default function Replay({ params }) {
 												{item.time.toFixed(2)}
 											</td>
 											<td className="py-2 text-center md:py-4">
-												{item.location.latitude}
+												{item.location?.latitude}
 											</td>
 											<td className="border-r py-2 text-center md:py-4">
-												{item.location.longitude}
+												{item.location?.longitude}
 											</td>
 											<td className="border-r py-2 text-center md:py-4">
 												{item.predictions.length}
