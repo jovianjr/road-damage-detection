@@ -294,6 +294,13 @@ export default function Replay({ params }) {
 		setIsDeleting(true)
 	}
 
+	const handleClickTable = () => {
+		document.getElementById('table-kerusakan').scrollIntoView({
+			behavior: 'smooth',
+			block: 'start',
+		})
+	}
+
 	useEffect(() => {
 		const handleSeeked = () => {
 			if (vidRef.current.isclick) {
@@ -345,7 +352,7 @@ export default function Replay({ params }) {
 			id: 1,
 			icon: <TableProperties />,
 			name: 'Lihat Tabel',
-			action: null,
+			action: handleClickTable,
 		},
 		{ id: 2, icon: <Map />, name: 'Lihat Peta', action: null },
 		{ id: 3, icon: <Pencil />, name: 'Edit', action: handleClickEdit },
@@ -411,7 +418,10 @@ export default function Replay({ params }) {
 					</div>
 
 					<div className="container mx-auto py-16">
-						<table className="w-full bg-white text-lg font-medium md:text-xl">
+						<table
+							className="w-full bg-white text-lg font-medium md:text-xl"
+							id="table-kerusakan"
+						>
 							<thead className="">
 								<tr>
 									{headerTableContent.map((item) => {
