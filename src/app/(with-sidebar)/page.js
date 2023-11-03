@@ -172,7 +172,7 @@ export default function Home() {
 			<div
 				className={clsx(
 					'relative flex h-full flex-col gap-6 bg-white transition-all',
-					showPanel ? 'w-[20svw] px-6 py-12 opacity-100' : 'w-0 p-0 opacity-0'
+					showPanel ? 'w-[22svw] px-6 py-12 opacity-100' : 'w-0 p-0 opacity-0'
 				)}
 			>
 				<div
@@ -183,22 +183,24 @@ export default function Home() {
 				>
 					<XIcon />
 				</div>
-				<h1 className="text-xl font-semibold">Pengaturan Label</h1>
-				<div className="flex flex-col gap-4">
-					{mapDataIsLoading || mapDataIsFetching ? (
-						<p className="mx-auto">Memuat...</p>
-					) : (
-						<>
-							{currentData.map((val, idx) => (
-								<LocationCard
-									location={val}
-									setCurrentData={setCurrentData}
-									key={val.id}
-									index={idx}
-								/>
-							))}
-						</>
-					)}
+				<h1 className="pl pr-4 text-xl font-semibold">Pengaturan Label</h1>
+				<div className="max-h-full overflow-scroll pr-4">
+					<div className="flex flex-col gap-4">
+						{mapDataIsLoading || mapDataIsFetching ? (
+							<p className="mx-auto">Memuat...</p>
+						) : (
+							<>
+								{currentData.map((val, idx) => (
+									<LocationCard
+										location={val}
+										setCurrentData={setCurrentData}
+										key={val.id}
+										index={idx}
+									/>
+								))}
+							</>
+						)}
+					</div>
 				</div>
 			</div>
 			<div className="h-full flex-grow bg-white">
@@ -257,22 +259,26 @@ const LocationCard = ({
 		<div className="flex flex-col overflow-hidden">
 			<div
 				className={clsx(
-					'flex w-full cursor-pointer gap-2 border border-c-blue px-2 py-2 transition-all hover:bg-slate-100',
+					'flex w-full cursor-pointer items-center gap-2 border border-c-blue px-2 py-2 transition-all hover:bg-slate-100',
 					expand ? 'rounded-t-lg' : 'rounded-lg '
 				)}
 				onClick={() => setExpand((prev) => !prev)}
 			>
-				<label className="relative flex w-1/4 cursor-pointer items-center gap-2">
-					<input
-						type="checkbox"
-						className="peer sr-only"
-						checked={location.status}
-						onChange={setLocationStatus}
-					/>
-					<div className="h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
-				</label>
-				<span className="line-clamp-1 flex-grow">{location.name}</span>
-				<span className="">
+				<div className="flex h-full w-1/5 items-center">
+					<label className="relative flex cursor-pointer items-center gap-2">
+						<input
+							type="checkbox"
+							className="peer sr-only"
+							checked={location.status}
+							onChange={setLocationStatus}
+						/>
+						<div className="h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+					</label>
+				</div>
+				<span className="line-clamp-2 w-3/5 flex-grow text-xs md:text-sm lg:text-base">
+					{location.name}
+				</span>
+				<span className="w-1/5">
 					<ChevronDown
 						className={clsx('transition-all', expand ? 'rotate-180' : '')}
 					/>
