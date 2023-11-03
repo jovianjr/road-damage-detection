@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import UploadFile from '@/app/components/uploadFile'
 
 import { updateRoad, updateRoadLocationByCSV } from '@/utils/services/road'
+import { toast } from 'react-toastify'
 
 const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 	const [fileCSV, setFileCSV] = useState(null)
@@ -26,6 +27,7 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 					updateLocWithCsv.mutateAsync(res.data)
 				} else {
 					queryClient.invalidateQueries(['road-by-id', formEdit.id])
+					toast.success('Sukses memperbarui nama rekaman')
 					onClose()
 				}
 			},
@@ -46,10 +48,11 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries(['road-by-id', formEdit.id])
+			toast.success('Sukses memperbarui data lokasi')
 			onClose()
 		},
 		onError: (error) => {
-			console.error('CSV update error:', error)
+			toast.error('Gagal memperbarui lokasi: ' + error.message)
 			queryClient.invalidateQueries(['road-by-id', formEdit.id])
 			onClose()
 		},

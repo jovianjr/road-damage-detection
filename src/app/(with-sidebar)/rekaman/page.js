@@ -94,7 +94,7 @@ export default function DaftarRekaman() {
 					</tbody>
 				</table>
 			) : (
-				<table className="w-3/4 bg-white text-lg font-medium md:text-xl">
+				<table className="w-3/4 bg-white text-lg font-medium">
 					<thead>
 						<tr>
 							{headerTableContent.map((item) => {
