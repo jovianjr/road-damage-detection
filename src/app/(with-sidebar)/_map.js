@@ -33,7 +33,8 @@ export default function Home({ locationData = [] }) {
 								position={[data.latitude, data.longitude]}
 							>
 								<Popup>
-									A pretty CSS3 popup. <br /> Easily customizable.
+									{kerusakan.name} <br />[{data?.latitude?.toFixed(6)},{' '}
+									{data?.longitude?.toFixed(6)}]
 								</Popup>
 							</Marker>
 						)
