@@ -24,210 +24,6 @@ import { getRoadById } from '@/utils/services/road'
 import clsx from 'clsx'
 import formatVideoTime from '@/utils/helpers/formatVideoTime'
 
-const dummyData = [
-	{
-		id: 1,
-		duration: '34',
-		latitude: 'Jl Gamping',
-		longitude: 'Jl Gamping',
-		totalKerusakan: 13,
-		videoData: [
-			{
-				id: 1,
-				text: 'Video',
-			},
-
-			{
-				id: 2,
-				text: 'Lokasi',
-			},
-			{
-				id: 3,
-				text: 'Video',
-			},
-		],
-		prediction: [
-			{
-				xMin: 0.6484375,
-				yMin: 0.3375,
-				xMax: 0.7203125,
-				yMax: 0.371875,
-				confidence: 0.5252203941345215,
-				class: 'pothole',
-				classId: 0,
-			},
-			{
-				xMin: 0.3,
-				yMin: 0.3,
-				xMax: 0.6,
-				yMax: 0.6,
-				confidence: 0.8,
-				class: 'large-rectangle',
-				classId: 1,
-			},
-			{
-				xMin: 0.1,
-				yMin: 0.1,
-				xMax: 0.4,
-				yMax: 0.4,
-				confidence: 0.7,
-				class: 'large-rectangle',
-				classId: 1,
-			},
-		],
-	},
-	{
-		id: 2,
-		duration: '57',
-		latitude: 'Maguwoharjo',
-		longitude: 'Maguwoharjo',
-		totalKerusakan: 7,
-		videoData: [
-			{
-				id: 1,
-				text: 'Video',
-			},
-		],
-		prediction: [
-			{
-				xMin: 0.6484389,
-				yMin: 0.3356,
-				xMax: 0.7203195,
-				yMax: 0.371876,
-				confidence: 0.5252203941345215,
-				class: 'pothole',
-				classId: 0,
-			},
-		],
-	},
-	{
-		id: 3,
-		duration: '87',
-		latitude: 'Parangkritis',
-		longitude: 'Parangkritis',
-		totalKerusakan: 32,
-		videoData: [
-			{
-				id: 1,
-				text: 'Video',
-			},
-			{
-				id: 2,
-				text: 'Lokasi',
-			},
-		],
-		prediction: [
-			{
-				xMin: 0.1,
-				yMin: 0.1,
-				xMax: 0.4,
-				yMax: 0.4,
-				confidence: 0.7,
-				class: 'large-rectangle',
-				classId: 1,
-			},
-		],
-	},
-	{
-		id: 4,
-		duration: '90',
-		latitude: 'Jl Pramuka',
-		longitude: 'Jl Pramuka',
-		totalKerusakan: 6,
-		videoData: [
-			{
-				id: 1,
-				text: 'Video',
-			},
-		],
-		prediction: [
-			{
-				xMin: 0.2,
-				yMin: 0.2,
-				xMax: 0.5,
-				yMax: 0.5,
-				confidence: 0.6,
-				class: 'medium-rectangle',
-				classId: 2,
-			},
-		],
-	},
-	{
-		id: 5,
-		duration: '111',
-		latitude: 'Jl Monjali',
-		longitude: 'Jl Monjali',
-		totalKerusakan: 2,
-		videoData: [
-			{
-				id: 1,
-				text: 'Video',
-			},
-		],
-		prediction: [
-			{
-				xMin: 0.3,
-				yMin: 0.3,
-				xMax: 0.6,
-				yMax: 0.6,
-				confidence: 0.8,
-				class: 'large-rectangle',
-				classId: 1,
-			},
-		],
-	},
-	{
-		id: 6,
-		duration: '134',
-		latitude: 'Kauman',
-		longitude: 'Kauman',
-		totalKerusakan: 19,
-		videoData: [
-			{
-				id: 1,
-				text: 'Video',
-			},
-			{ id: 2, text: 'Lokasi' },
-		],
-		prediction: [
-			{
-				xMin: 0.2,
-				yMin: 0.3,
-				xMax: 0.7,
-				yMax: 0.7,
-				confidence: 0.75,
-				class: 'medium-rectangle',
-				classId: 2,
-			},
-		],
-	},
-	{
-		id: 7,
-		duration: '156',
-		latitude: 'Babarsari',
-		longitude: 'Babarsari',
-		totalKerusakan: 5,
-		videoData: [
-			{
-				id: 1,
-				text: 'Video',
-			},
-			{ id: 2, text: 'Lokasi' },
-		],
-		prediction: [
-			{
-				xMin: 0.05,
-				yMin: 0.05,
-				xMax: 0.45,
-				yMax: 0.45,
-				confidence: 0.85,
-				class: 'large-rectangle',
-				classId: 1,
-			},
-		],
-	},
-]
-
 const headerTableContent = [
 	{ id: 1, icon: <Clock />, name: 'Durasi Video' },
 	{ id: 2, icon: <AlignLeft />, name: 'Longitude' },
@@ -320,7 +116,7 @@ export default function Replay({ params }) {
 					const rectWidth = (xMax - xMin) * canvas.width
 					const rectHeight = (yMax - yMin) * canvas.height
 					context.strokeStyle = 'red'
-					context.lineWidth = 3
+					context.lineWidth = 5
 					context.strokeRect(rectX, rectY, rectWidth, rectHeight)
 				})
 
@@ -362,7 +158,53 @@ export default function Replay({ params }) {
 	return (
 		<div className="min-h-screen w-full bg-[#fff] pt-24 text-black">
 			{roadDataIsLoading || roadDataIsFetching ? (
-				<p className="w-full text-center">Loading...</p>
+				<>
+					<div className="container mx-auto w-[831px]">
+						<div className="h-[500px] w-full animate-pulse rounded-2xl bg-slate-300"></div>
+						<div className="mt-12 flex w-full items-center gap-5">
+							<div className="h-[24px] w-full animate-pulse rounded-lg bg-slate-300 px-6 py-3 text-2xl"></div>
+							<div className="grid w-1/2 grid-cols-4">
+								{icons.map((item) => {
+									return (
+										<div
+											className="aspect-square h-[24px] animate-pulse rounded-lg bg-slate-300"
+											key={item.id}
+										></div>
+									)
+								})}
+							</div>
+						</div>
+					</div>
+					<div className="container mx-auto py-16">
+						<table className="mx-auto w-full">
+							<thead>
+								<tr>
+									{headerTableContent.map((item) => {
+										return (
+											<td key={item.id}>
+												<div className="m-2 h-[48px] animate-pulse rounded-lg bg-slate-300 p-2"></div>
+											</td>
+										)
+									})}
+								</tr>
+							</thead>
+
+							<tbody>
+								{Array(10)
+									.fill()
+									.map((_, id) => (
+										<tr key={id}>
+											{headerTableContent.map((item) => (
+												<td key={item.id}>
+													<div className="m-2 h-[48px] animate-pulse rounded-lg bg-slate-300 p-2"></div>
+												</td>
+											))}
+										</tr>
+									))}
+							</tbody>
+						</table>
+					</div>
+				</>
 			) : (
 				<>
 					<EditPopup
@@ -419,7 +261,7 @@ export default function Replay({ params }) {
 
 					<div className="container mx-auto py-16">
 						<table
-							className="w-full bg-white text-lg font-medium md:text-xl"
+							className="w-full bg-white text-lg font-medium"
 							id="table-kerusakan"
 						>
 							<thead className="">
@@ -472,7 +314,7 @@ export default function Replay({ params }) {
 												<td className="border-r py-2 text-center md:py-4">
 													{formatVideoTime(item.time)}
 												</td>
-												<td className="py-2 text-center md:py-4">
+												<td className="border-r py-2 text-center md:py-4">
 													{item.location?.latitude.toFixed(4)}
 												</td>
 												<td className="border-r py-2 text-center md:py-4">
@@ -511,7 +353,7 @@ export default function Replay({ params }) {
 								) : (
 									<tr>
 										<td className="py-2 text-center text-xl italic md:py-4">
-											No data found
+											Tidak ada data ditemukan
 										</td>
 									</tr>
 								)}

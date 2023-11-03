@@ -94,7 +94,7 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 						<Button
 							onClick={onClose}
 							text="Batal"
-							className="mt-4 w-fit !border-c-yellow !bg-white py-2"
+							className="mt-4 w-fit !border-c-yellow !bg-white py-2 hover:underline"
 						/>
 						<Button
 							loading={updateData.isLoading}

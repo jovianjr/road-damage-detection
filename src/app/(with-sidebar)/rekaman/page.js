@@ -66,7 +66,33 @@ export default function DaftarRekaman() {
 			</h1>
 
 			{roadListIsLoading || roadListIsFetching ? (
-				<p>Memuat data...</p>
+				<table className="w-3/4">
+					<thead>
+						<tr>
+							{headerTableContent.map((item) => {
+								return (
+									<td key={item.id}>
+										<div className="m-2 h-[48px] animate-pulse rounded-lg bg-slate-300 p-2"></div>
+									</td>
+								)
+							})}
+						</tr>
+					</thead>
+
+					<tbody>
+						{Array(10)
+							.fill()
+							.map((_, id) => (
+								<tr key={id}>
+									{headerTableContent.map((item) => (
+										<td key={item.id}>
+											<div className="m-2 h-[48px] animate-pulse rounded-lg bg-slate-300 p-2"></div>
+										</td>
+									))}
+								</tr>
+							))}
+					</tbody>
+				</table>
 			) : (
 				<table className="w-3/4 bg-white text-lg font-medium md:text-xl">
 					<thead>
@@ -132,7 +158,7 @@ export default function DaftarRekaman() {
 						) : (
 							<tr>
 								<td className="py-2 text-center text-2xl italic md:py-4">
-									No data found
+									Tidak ada data ditemukan
 								</td>
 							</tr>
 						)}
