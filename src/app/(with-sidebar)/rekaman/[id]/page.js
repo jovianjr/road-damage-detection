@@ -22,6 +22,7 @@ import { useQuery } from 'react-query'
 import { getRoadById } from '@/utils/services/road'
 
 import clsx from 'clsx'
+import formatVideoTime from '@/utils/helpers/formatVideoTime'
 
 const dummyData = [
 	{
@@ -440,13 +441,13 @@ export default function Replay({ params }) {
 									roadData?.data.detections?.map((item) => (
 										<tr key={item._id}>
 											<td className="border-r py-2 text-center md:py-4">
-												{item.time.toFixed(2)}
+												{formatVideoTime(item.time)}
 											</td>
 											<td className="py-2 text-center md:py-4">
-												{item.location?.latitude}
+												{item.location?.latitude.toFixed(4)}
 											</td>
 											<td className="border-r py-2 text-center md:py-4">
-												{item.location?.longitude}
+												{item.location?.longitude.toFixed(4)}
 											</td>
 											<td className="border-r py-2 text-center md:py-4">
 												{item.predictions.length}

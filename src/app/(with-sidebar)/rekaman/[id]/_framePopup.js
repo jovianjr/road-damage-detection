@@ -1,3 +1,4 @@
+import formatVideoTime from '@/utils/helpers/formatVideoTime'
 import clsx from 'clsx'
 import { X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
@@ -16,13 +17,7 @@ const FramePopup = ({
 	const [time, setTime] = useState()
 
 	useEffect(() => {
-		const mins = Math.floor(secs / 60)
-		const remainingSecs = secs % 60
-
-		const mm = String(mins).padStart(2, '0')
-		const ss = String(remainingSecs).padStart(2, '0')
-
-		setTime(`${mm}:${ss}`)
+		setTime(formatVideoTime(secs))
 	}, [secs])
 
 	useEffect(() => {
