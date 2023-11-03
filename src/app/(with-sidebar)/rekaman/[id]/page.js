@@ -438,45 +438,66 @@ export default function Replay({ params }) {
 
 							<tbody>
 								{roadData?.data.detections?.length !== 0 ? (
-									roadData?.data.detections?.map((item) => (
-										<tr key={item._id}>
-											<td className="border-r py-2 text-center md:py-4">
-												{formatVideoTime(item.time)}
-											</td>
-											<td className="py-2 text-center md:py-4">
-												{item.location?.latitude.toFixed(4)}
-											</td>
-											<td className="border-r py-2 text-center md:py-4">
-												{item.location?.longitude.toFixed(4)}
-											</td>
-											<td className="border-r py-2 text-center md:py-4">
-												{item.predictions.length}
-											</td>
-											<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
-												{item.predictions.map((data) => {
-													return (
-														<div
-															className="rounded-lg bg-pink-300 px-2.5 py-1 text-lg"
-															key={data.classId}
-														>
-															{data.class}
-														</div>
-													)
-												})}
-											</td>
-											<td className="px-3 py-2 text-center md:py-4">
-												<div className="grid w-full grid-cols-1">
-													<IconComponent
-														onClick={() => {
-															handleSeeFrameClick(item)
-														}}
-														icon={<Eye />}
-														name="Lihat Frame"
-													/>
-												</div>
-											</td>
-										</tr>
-									))
+									roadData?.data.detections?.map((item) => {
+										const jenisKerusakan = []
+
+										item.predictions.forEach((predict) => {
+											const foundKerusakan = jenisKerusakan.find(
+												(o) => o.name === predict.class
+											)
+
+											if (foundKerusakan) {
+												foundKerusakan.count += 1
+											} else {
+												jenisKerusakan.push({
+													id: predict.classId,
+													name: predict.class,
+													count: 1,
+												})
+											}
+										})
+
+										return (
+											<tr key={item._id}>
+												<td className="border-r py-2 text-center md:py-4">
+													{formatVideoTime(item.time)}
+												</td>
+												<td className="py-2 text-center md:py-4">
+													{item.location?.latitude.toFixed(4)}
+												</td>
+												<td className="border-r py-2 text-center md:py-4">
+													{item.location?.longitude.toFixed(4)}
+												</td>
+												<td className="border-r py-2 text-center md:py-4">
+													{item.predictions.length}
+												</td>
+												<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
+													{jenisKerusakan.map((data) => {
+														return (
+															<div
+																className="rounded-lg bg-pink-300 px-2.5 py-1 text-lg"
+																key={data.id}
+															>
+																{data.name}
+																{data.count !== 1 ? ` (${data.count})` : ''}
+															</div>
+														)
+													})}
+												</td>
+												<td className="px-3 py-2 text-center md:py-4">
+													<div className="grid w-full grid-cols-1">
+														<IconComponent
+															onClick={() => {
+																handleSeeFrameClick(item)
+															}}
+															icon={<Eye />}
+															name="Lihat Frame"
+														/>
+													</div>
+												</td>
+											</tr>
+										)
+									})
 								) : (
 									<tr>
 										<td className="py-2 text-center text-xl italic md:py-4">
