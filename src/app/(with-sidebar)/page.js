@@ -187,7 +187,7 @@ export default function Home() {
 				<div className="max-h-full overflow-y-auto pr-4">
 					<div className="flex flex-col gap-4">
 						{mapDataIsLoading || mapDataIsFetching ? (
-							<div className="lex flex-col gap-4">
+							<div className="flex flex-col gap-4">
 								{Array(10)
 									.fill()
 									.map((_, index) => (
