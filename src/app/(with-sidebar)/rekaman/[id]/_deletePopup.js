@@ -40,14 +40,21 @@ const DeletePopup = ({ isDeleting, idData, titleData, onClose }) => {
 					</button>
 					<h1 className="mb-4 text-2xl font-semibold">Konfirmasi Hapus</h1>
 					<p>Anda yakin ingin menghapus rekaman {titleData}?</p>
-					<Button
-						loading={deleteData.isLoading}
-						onClick={() => {
-							deleteData.mutateAsync()
-						}}
-						text="Ya"
-						className="mx-auto mt-4 w-fit py-2"
-					/>
+					<div className="flex justify-center gap-4">
+						<Button
+							onClick={onClose}
+							text="Batal"
+							className="mt-4 w-fit !border-c-yellow !bg-white py-2"
+						/>
+						<Button
+							loading={deleteData.isLoading}
+							onClick={() => {
+								deleteData.mutateAsync()
+							}}
+							text="Ya"
+							className="mt-4 w-fit py-2"
+						/>
+					</div>
 				</div>
 			</div>
 		</div>
