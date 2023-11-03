@@ -34,7 +34,6 @@ const headerTableContent = [
 ]
 
 export default function Replay({ params }) {
-	const videoFile = '/example-video.mp4'
 	const vidRef = useRef(null)
 	const [frameDataUrl, setFrameDataUrl] = useState(null)
 	const [activeFrame, setActiveFrame] = useState({
@@ -46,6 +45,8 @@ export default function Replay({ params }) {
 	})
 	const [formEdit, setFormEdit] = useState(null)
 	const [isDeleting, setIsDeleting] = useState(false)
+	const [holeType, setHoleType] = useState('all')
+	const [filteredData, setFilteredData] = useState()
 
 	const roadId = params.id
 
@@ -140,8 +141,13 @@ export default function Replay({ params }) {
 	}, [roadDataIsLoading])
 
 	useEffect(() => {
-		console.log(formEdit)
-	}, [formEdit])
+		const filteredDetections = roadData?.data.detections?.filter((item) => {
+			return holeType === 'all'
+				? true
+				: item.predictions.some((prediction) => prediction.class === holeType)
+		})
+		setFilteredData(filteredDetections)
+	}, [roadDataIsLoading, holeType])
 
 	const icons = [
 		{
@@ -285,19 +291,28 @@ export default function Replay({ params }) {
 											</td>
 										) : (
 											<td
-												className="border-b py-2 text-center md:py-4"
+												className="border-b border-r py-2 text-center md:py-4"
 												key={item.id}
 											>
 												<div className="flex items-center justify-center gap-4">
 													{item.icon}
-													<select>
+													<select
+														value={holeType}
+														onChange={(event) => {
+															setHoleType(event.target.value)
+														}}
+													>
 														<option value="all">{item.name} (Semua)</option>
 														<option value="pothole">Pothole</option>
-														<option value="alligator">Alligator Hole</option>
-														<option value="longitudinal">
+														<option value="alligator cracking">
+															Alligator Cracking
+														</option>
+														<option value="longitudinal cracking">
 															Longitudinal Cracking
 														</option>
-														<option value="lateral">Lateral Cracking</option>
+														<option value="lateral cracking">
+															Lateral Cracking
+														</option>
 													</select>
 												</div>
 											</td>
@@ -307,8 +322,8 @@ export default function Replay({ params }) {
 							</thead>
 
 							<tbody>
-								{roadData?.data.detections?.length !== 0 ? (
-									roadData?.data.detections?.map((item) => {
+								{filteredData?.length !== 0 ? (
+									filteredData?.map((item) => {
 										const jenisKerusakan = []
 
 										item.predictions.forEach((predict) => {
