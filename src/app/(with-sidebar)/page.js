@@ -184,10 +184,19 @@ export default function Home() {
 					<XIcon />
 				</div>
 				<h1 className="pl pr-4 text-xl font-semibold">Pengaturan Label</h1>
-				<div className="max-h-full overflow-scroll pr-4">
+				<div className="max-h-full overflow-y-auto pr-4">
 					<div className="flex flex-col gap-4">
 						{mapDataIsLoading || mapDataIsFetching ? (
-							<p className="mx-auto">Memuat...</p>
+							<div className="lex flex-col gap-4">
+								{Array(10)
+									.fill()
+									.map((_, index) => (
+										<div
+											className="h-[48px] w-full animate-pulse rounded-lg bg-slate-300"
+											key={index}
+										></div>
+									))}
+							</div>
 						) : (
 							<>
 								{currentData.map((val, idx) => (
@@ -205,9 +214,9 @@ export default function Home() {
 			</div>
 			<div className="h-full flex-grow bg-white">
 				{mapDataIsLoading || mapDataIsFetching ? (
-					<p className="mt-24 h-full w-full text-center">
-						Memuat peta, harap tunggu...
-					</p>
+					<div className="h-screen w-full animate-pulse bg-slate-300 text-center">
+						<p className="pt-24 font-semibold">Memuat peta, harap tunggu...</p>
+					</div>
 				) : (
 					<>
 						<Map locationData={currentData} />
