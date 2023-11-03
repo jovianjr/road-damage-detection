@@ -90,14 +90,21 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 						type="csv"
 					></UploadFile>
 
-					<Button
-						loading={updateData.isLoading}
-						onClick={() => {
-							updateData.mutateAsync()
-						}}
-						text="Simpan"
-						className="mx-auto mt-4 w-fit py-2"
-					/>
+					<div className="flex justify-center gap-4">
+						<Button
+							onClick={onClose}
+							text="Batal"
+							className="mt-4 w-fit !border-c-yellow !bg-white py-2"
+						/>
+						<Button
+							loading={updateData.isLoading}
+							onClick={() => {
+								updateData.mutateAsync()
+							}}
+							text="Simpan"
+							className="mt-4 w-fit py-2"
+						/>
+					</div>
 				</div>
 			</div>
 		</div>
