@@ -266,8 +266,8 @@ export default function Replay({ params }) {
 						>
 							<thead className="">
 								<tr>
-									{headerTableContent.map((item) => {
-										return (
+									{headerTableContent.map((item) =>
+										item.name !== 'Jenis Kerusakan' ? (
 											<td
 												className={clsx(
 													'border-b py-2 text-center md:py-4',
@@ -283,8 +283,26 @@ export default function Replay({ params }) {
 													<p>{item.name}</p>
 												</div>
 											</td>
+										) : (
+											<td
+												className="border-b py-2 text-center md:py-4"
+												key={item.id}
+											>
+												<div className="flex items-center justify-center gap-4">
+													{item.icon}
+													<select>
+														<option value="all">{item.name} (Semua)</option>
+														<option value="pothole">Pothole</option>
+														<option value="alligator">Alligator Hole</option>
+														<option value="longitudinal">
+															Longitudinal Cracking
+														</option>
+														<option value="lateral">Lateral Cracking</option>
+													</select>
+												</div>
+											</td>
 										)
-									})}
+									)}
 								</tr>
 							</thead>
 
@@ -327,7 +345,16 @@ export default function Replay({ params }) {
 													{jenisKerusakan.map((data) => {
 														return (
 															<div
-																className="rounded-lg bg-pink-300 px-2.5 py-1 text-lg"
+																className={clsx(
+																	'rounded-lg px-2.5 py-1 text-lg',
+																	data.name === 'pothole'
+																		? 'bg-pink-300'
+																		: data.name === 'longitudinal cracking'
+																		? 'bg-green-300'
+																		: data.name === 'lateral cracking'
+																		? 'bg-blue-300'
+																		: 'bg-yellow-300'
+																)}
 																key={data.id}
 															>
 																{data.name}

@@ -37,14 +37,32 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 
 	const updateLocWithCsv = useMutation({
 		mutationKey: ['update-location-csv'],
-		mutationFn: (data) => {
+		mutationFn: async (data) => {
 			console.log('Updateing loc with csv')
 			const formData = new FormData()
 			formData.append('csv', fileCSV)
-			return updateRoadLocationByCSV({
-				id: data._id,
-				formData: formData,
-			})
+			try {
+				const response = await updateRoadLocationByCSV({
+					id: data._id,
+					formData: formData,
+				})
+				return response
+			} catch (error) {
+				if (error.response) {
+					if (error.response.status === 400) {
+						toast.error(
+							'Pastikan CSV terdiri dari kolom [microTime, latitude, longitude]'
+						)
+					} else {
+						toast.error('Kesalahan ketika memperbarui data.')
+					}
+				} else if (error.request) {
+					toast.error('Kesalahan pada server')
+				} else {
+					toast.error('Error: ' + error.message)
+				}
+				throw error
+			}
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries(['road-by-id', formEdit.id])
@@ -52,7 +70,6 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 			onClose()
 		},
 		onError: (error) => {
-			toast.error('Gagal memperbarui lokasi: ' + error.message)
 			queryClient.invalidateQueries(['road-by-id', formEdit.id])
 			onClose()
 		},
