@@ -9,7 +9,7 @@ const videoConstraints = {
 	width: 1080,
 	height: 640,
 	frameRate: { ideal: 30, max: 30 },
-	facingMode: { exact: 'environment' },
+	facingMode: 'environment',
 }
 
 var contentTypes = [
@@ -35,11 +35,13 @@ const WebcamStreamCapture = () => {
 				video: videoConstraints,
 			})
 			.catch(() => {
+				console.log('false')
 				setBrowserSupport(false)
 			})
 
 		contentTypes.forEach((content) => {
 			if (MediaRecorder.isTypeSupported(content.type)) {
+				console.log(content)
 				setContentType(content)
 			}
 		})
@@ -84,6 +86,7 @@ const WebcamStreamCapture = () => {
 					</h1>
 					<p className="md:text-md text-center text-xs lg:text-lg">
 						Mohon maaf, browser yang ada gunakan tidak mendukung fitur ini.
+						Silakan coba lagi.
 						<br />
 						Pastikan browser anda mendukung:
 					</p>

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react'
 import Webcam from 'react-webcam'
+import fixWebmDuration from 'fix-webm-duration'
 
 const Record = ({
 	contentType = {},
@@ -15,6 +16,7 @@ const Record = ({
 	const captureLocation = useRef()
 	const [capturing, setCapturing] = useState(false)
 	const [durationData, setDurationData] = useState({})
+	const [startTime, setStartTime] = useState()
 
 	const startCapture = async () => {
 		mediaRecorderRef.current = new MediaRecorder(webCamRef.current.stream, {
@@ -40,6 +42,7 @@ const Record = ({
 		})
 
 		mediaRecorderRef.current.start()
+		setStartTime(Date.now())
 	}
 
 	const getDuration = () => {
@@ -87,7 +90,15 @@ const Record = ({
 			const blob = new Blob([data], {
 				type: contentType.type,
 			})
-			setBlob(blob)
+
+			if (contentType.extension === 'webm') {
+				var duration = Date.now() - startTime
+				fixWebmDuration(blob, duration, function (fixedBlob) {
+					setBlob(fixedBlob)
+				})
+			} else {
+				setBlob(blob)
+			}
 		}
 	}
 
