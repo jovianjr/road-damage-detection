@@ -54,15 +54,15 @@ export default function TambahVideo() {
 	})
 
 	return (
-		<section className="flex h-full w-full flex-col items-start justify-start gap-6 px-10 py-16">
+		<section className="flex h-full w-full flex-col items-start justify-start gap-6 px-10 py-8 md:py-16">
 			<div className="flex flex-col gap-2">
 				<h1 className="text-2xl font-semibold">Unggah Video</h1>
 			</div>
-			<div className="flex w-full flex-grow gap-10">
+			<div className="flex w-full flex-col gap-10 md:flex-grow">
 				<UploadFile
 					title="Unggah file video"
 					name="video"
-					className="!w-2/3"
+					className="!md:w-2/3"
 					type="video"
 					required
 					disabled={
@@ -73,7 +73,7 @@ export default function TambahVideo() {
 				<UploadFile
 					title="Unggah file lokasi"
 					name="location"
-					className="!w-1/3"
+					className="!md:w-1/3"
 					onChange={setFileCSV}
 					disabled={
 						uploadFile.isLoading || saveVideo.isLoading || updateVideo.isLoading
@@ -83,10 +83,10 @@ export default function TambahVideo() {
 			</div>
 			{file ? (
 				<div className="flex w-full flex-col gap-2">
-					<span className="flex w-full gap-2">
+					<span className="flex w-full gap-2 max-md:flex-col">
 						<input
 							type="text"
-							className="flex-grow rounded-full border border-c-blue px-4 py-1 placeholder-shown:text-sm placeholder-shown:font-light disabled:bg-c-blue/10"
+							className="flex-grow rounded-full border border-c-blue px-4 py-1 placeholder-shown:text-sm placeholder-shown:font-light disabled:bg-c-blue/10 max-md:text-xs"
 							placeholder="Nama video"
 							value={title}
 							onChange={(e) => setTitle(e.target.value)}
@@ -115,7 +115,7 @@ export default function TambahVideo() {
 								if (file && title) uploadFile.mutateAsync()
 							}}
 							text="Simpan"
-							className="w-fit py-2"
+							className="w-fit py-2 max-md:mx-auto"
 						/>
 					</span>
 					<small className="text-red-500">{error}</small>
