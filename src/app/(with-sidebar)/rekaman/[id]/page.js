@@ -162,11 +162,11 @@ export default function Replay({ params }) {
 	]
 
 	return (
-		<div className="min-h-screen w-full bg-[#fff] pt-24 text-black">
+		<div className="min-h-screen w-full bg-[#fff] pt-8 text-black md:pt-24">
 			{roadDataIsLoading || roadDataIsFetching ? (
 				<>
-					<div className="container mx-auto w-[831px]">
-						<div className="h-[500px] w-full animate-pulse rounded-2xl bg-slate-300"></div>
+					<div className="container mx-auto max-md:px-2 md:w-[831px]">
+						<div className="h-[500px] w-full animate-pulse rounded-lg bg-slate-300 md:rounded-2xl"></div>
 						<div className="mt-12 flex w-full items-center gap-5">
 							<div className="h-[24px] w-full animate-pulse rounded-lg bg-slate-300 px-6 py-3 text-2xl"></div>
 							<div className="grid w-1/2 grid-cols-4">
@@ -234,7 +234,7 @@ export default function Replay({ params }) {
 						onClose={() => setFrameDataUrl()}
 						{...activeFrame}
 					/>
-					<div className="container mx-auto w-[831px]">
+					<div className="container mx-auto max-md:px-2 md:w-[831px]">
 						<div className="w-full">
 							<video
 								muted
@@ -242,15 +242,15 @@ export default function Replay({ params }) {
 								src={roadData.data.videoUrl}
 								id="video-player"
 								ref={vidRef}
-								className="w-full rounded-2xl"
+								className="w-full rounded-lg md:rounded-2xl"
 								crossOrigin="anonymous"
 							/>
 						</div>
-						<div className="mt-12 flex w-full items-center gap-5">
-							<div className="w-full px-6 py-3 text-2xl">
+						<div className="mt-2 flex w-full items-center gap-5 md:mt-12">
+							<div className="w-full px-2 py-3 text-lg md:px-6 md:text-2xl">
 								{roadData?.data.title}
 							</div>
-							<div className="grid w-1/2 grid-cols-4">
+							<div className="grid w-2/3 grid-cols-4 max-md:gap-4 max-md:pr-2">
 								{icons.map((item) => {
 									return (
 										<IconComponent
@@ -265,7 +265,7 @@ export default function Replay({ params }) {
 						</div>
 					</div>
 
-					<div className="container mx-auto py-16">
+					<div className="container mx-auto py-8 md:py-16">
 						<table
 							className="w-full bg-white text-lg font-medium"
 							id="table-kerusakan"

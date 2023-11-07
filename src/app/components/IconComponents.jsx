@@ -14,7 +14,7 @@ export default function IconComponent({ icon, name, onClick = null }) {
 	return (
 		isMounted && (
 			<>
-				<div className="flex items-center justify-center">
+				<div className="flex items-center justify-center max-md:p-2">
 					<div
 						data-tooltip-content={name}
 						data-tooltip-id="icon-tooltip"
@@ -36,6 +36,7 @@ export default function IconComponent({ icon, name, onClick = null }) {
 						padding: '4px 12px',
 					}}
 					noArrow
+					className="max-md:hidden"
 				/>
 			</>
 		)
