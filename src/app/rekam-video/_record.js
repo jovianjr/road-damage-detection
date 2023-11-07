@@ -104,7 +104,7 @@ const Record = ({
 
 	return (
 		<section className="flex h-full w-full items-center justify-center">
-			<div className="relative border-2 border-c-blue">
+			<div className="relative max-md:px-2 md:border-2 md:border-c-blue">
 				<Webcam
 					audio={false}
 					ref={webCamRef}

@@ -79,7 +79,7 @@ export default function UploadFile({
 					<span className="absolute left-0 top-0 flex h-full w-28 items-center justify-center bg-c-blue px-4 text-white">
 						Pilih File
 					</span>
-					<span className="line-clamp-1 pl-28 text-sm">
+					<span className="line-clamp-1 pl-28 text-xs md:text-sm">
 						{file.name ?? 'Tidak ada file dipilih'}
 					</span>
 				</span>
@@ -88,7 +88,7 @@ export default function UploadFile({
 						onDrop={handleDrop}
 						onDragOver={handleDragOver}
 						className={clsx(
-							'flex h-full w-full cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border border-c-blue text-lg text-c-blue hover:bg-c-blue/10',
+							'flex h-full w-full cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border border-c-blue text-sm text-c-blue hover:bg-c-blue/10 max-md:py-4 md:text-lg',
 							disabled ? 'cursor-not-allowed !bg-c-blue/10' : ''
 						)}
 					>

@@ -18,7 +18,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
 	return (
 		<html lang="en">
-			<body className={clsx('flex font-poppins', poppins.variable)}>
+			<body
+				className={clsx('flex font-poppins max-md:flex-col', poppins.variable)}
+			>
 				<QueryProvider>{children}</QueryProvider>
 			</body>
 		</html>
