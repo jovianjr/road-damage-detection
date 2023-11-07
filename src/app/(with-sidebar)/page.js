@@ -172,7 +172,9 @@ export default function Home() {
 			<div
 				className={clsx(
 					'relative flex h-full flex-col gap-6 bg-white transition-all',
-					showPanel ? 'w-[22svw] px-6 py-12 opacity-100' : 'w-0 p-0 opacity-0'
+					showPanel
+						? 'w-[85vw] px-6 py-12 opacity-100 md:w-[22svw]'
+						: 'w-0 p-0 opacity-0'
 				)}
 			>
 				<div
@@ -214,8 +216,13 @@ export default function Home() {
 			</div>
 			<div className="h-full flex-grow bg-white">
 				{mapDataIsLoading || mapDataIsFetching ? (
-					<div className="h-screen w-full animate-pulse bg-slate-300 text-center">
-						<p className="pt-24 font-semibold">Memuat peta, harap tunggu...</p>
+					<div className="mx-auto flex h-[60vh] w-[50%] flex-col justify-center">
+						<div className="mx-auto aspect-square w-16 animate-spin md:w-32">
+							<div className="h-full w-full rounded-[50%] border-4 border-b-c-blue border-t-c-blue"></div>
+						</div>
+						<p className="mt-4 animate-pulse text-center md:text-2xl">
+							Memuat peta
+						</p>
 					</div>
 				) : (
 					<>
