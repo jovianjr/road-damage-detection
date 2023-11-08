@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 import fixWebmDuration from 'fix-webm-duration'
 
@@ -17,6 +17,8 @@ const Record = ({
 	const [capturing, setCapturing] = useState(false)
 	const [durationData, setDurationData] = useState({})
 	const [startTime, setStartTime] = useState()
+	const [endTime, setEndTime] = useState()
+	const [tempBlob, setTempBlob] = useState()
 
 	const startCapture = async () => {
 		mediaRecorderRef.current = new MediaRecorder(webCamRef.current.stream, {
@@ -42,6 +44,7 @@ const Record = ({
 		})
 
 		mediaRecorderRef.current.start()
+		setEndTime()
 		setStartTime(Date.now())
 	}
 
@@ -83,24 +86,34 @@ const Record = ({
 		}
 	}
 
-	const handleDataAvailable = ({ data }) => {
-		clearInterval(captureLocation.current)
-		setCapturing(false)
-		if (data.size > 0) {
-			const blob = new Blob([data], {
-				type: contentType.type,
-			})
-
-			if (contentType.extension === 'webm') {
-				var duration = Date.now() - startTime
-				fixWebmDuration(blob, duration, function (fixedBlob) {
-					setBlob(fixedBlob)
+	const handleDataAvailable = useCallback(
+		({ data }) => {
+			clearInterval(captureLocation.current)
+			setCapturing(false)
+			if (data.size > 0) {
+				const blob = new Blob([data], {
+					type: contentType.type,
 				})
-			} else {
-				setBlob(blob)
+
+				setEndTime(Date.now())
+				if (contentType.extension === 'webm') {
+					setTempBlob(blob)
+				} else {
+					setBlob(blob)
+				}
 			}
+		},
+		[contentType]
+	)
+
+	useEffect(() => {
+		if (tempBlob && startTime && endTime && contentType.extension === 'webm') {
+			var duration = endTime - startTime
+			fixWebmDuration(tempBlob, duration, function (fixedBlob) {
+				setBlob(fixedBlob)
+			})
 		}
-	}
+	}, [tempBlob, contentType, startTime, endTime])
 
 	return (
 		<section className="flex h-full w-full items-center justify-center">
