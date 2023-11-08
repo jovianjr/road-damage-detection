@@ -58,11 +58,11 @@ export default function TambahVideo() {
 			<div className="flex flex-col gap-2">
 				<h1 className="text-2xl font-semibold">Unggah Video</h1>
 			</div>
-			<div className="flex w-full flex-col gap-10 md:flex-grow">
+			<div className="flex w-full flex-col gap-10 md:h-full md:flex-row">
 				<UploadFile
 					title="Unggah file video"
 					name="video"
-					className="!md:w-2/3"
+					className="md:!w-2/3"
 					type="video"
 					required
 					disabled={
@@ -73,7 +73,7 @@ export default function TambahVideo() {
 				<UploadFile
 					title="Unggah file lokasi"
 					name="location"
-					className="!md:w-1/3"
+					className="md:!w-1/3"
 					onChange={setFileCSV}
 					disabled={
 						uploadFile.isLoading || saveVideo.isLoading || updateVideo.isLoading
