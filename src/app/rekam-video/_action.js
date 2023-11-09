@@ -87,7 +87,7 @@ const Action = ({ blob, contentType, locationData }) => {
 				className="aspect-video h-[50svh]"
 				autoPlay
 			></video>
-			<div className="mx-auto flex gap-10">
+			<div className="mx-auto flex gap-10 max-md:gap-2 max-md:px-2">
 				<ButtonOption
 					as="button"
 					buttonText="Unduh Video"

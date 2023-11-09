@@ -197,7 +197,10 @@ export default function DaftarRekaman() {
 					<div className="mt-8 flex w-full flex-col gap-4 px-4 md:hidden">
 						{roadList?.data !== 0 ? (
 							roadList?.data?.map((item, index) => (
-								<div className="flex flex-col gap-1 p-4 shadow-xl" key={index}>
+								<div
+									className="flex flex-col gap-1 rounded-md border border-c-blue p-4 shadow-md"
+									key={index}
+								>
 									<p>{convertTime(item.createdAt)}</p>
 									<p className="w-full text-lg font-semibold">{item.title}</p>
 									<p>
