@@ -92,7 +92,8 @@ export default function Replay({ params }) {
 				longitude: detection.location.longitude,
 			})
 		})
-		setMapData(dataPeta)
+
+		if (dataPeta.length > 0) setMapData(dataPeta)
 	}, [roadData])
 
 	const handleClickEdit = () => {
@@ -323,20 +324,13 @@ export default function Replay({ params }) {
 						</div>
 					</div>
 
-					<div
-						className="container mx-auto rounded-xl py-8 md:py-16"
-						id="peta-kerusakan"
-					>
-						<MapSection locationData={mapData} />
-					</div>
-
 					<div className="container mx-auto py-8 md:py-16">
 						<div
-							className="w-full overflow-x-auto max-md:px-4"
+							className="w-full overflow-x-auto max-md:px-4 md:max-h-screen"
 							id="table-kerusakan"
 						>
 							<table className="w-full bg-white text-lg font-medium max-md:text-sm">
-								<thead>
+								<thead className="md:sticky md:top-0 md:bg-white">
 									<tr>
 										{headerTableContent.map((item) =>
 											item.name !== 'Jenis Kerusakan' ? (
@@ -469,6 +463,15 @@ export default function Replay({ params }) {
 							</table>
 						</div>
 					</div>
+
+					{mapData ? (
+						<div
+							className="container mx-auto rounded-xl py-8 md:py-16"
+							id="peta-kerusakan"
+						>
+							<MapSection locationData={mapData} />
+						</div>
+					) : null}
 				</>
 			)}
 		</div>

@@ -1,5 +1,6 @@
 'use client'
 import 'leaflet/dist/leaflet.css'
+import L from 'leaflet'
 import {
 	MapContainer,
 	Marker,
@@ -7,6 +8,13 @@ import {
 	TileLayer,
 	ZoomControl,
 } from 'react-leaflet'
+
+const myIcon = new L.Icon({
+	iconUrl: `/marker-icon-2x-blue.png`,
+	iconRetinaUrl: `/marker-icon-2x-blue.png`,
+	iconSize: [20, 35],
+	iconAnchor: [10, 35],
+})
 
 export default function MapSection({ locationData = [] }) {
 	const initialPosition = [
@@ -20,7 +28,7 @@ export default function MapSection({ locationData = [] }) {
 			<MapContainer
 				className="relative z-10 h-[590px] w-full rounded-xl"
 				center={initialPosition}
-				zoom={5}
+				zoom={13}
 				zoomControl={false}
 			>
 				<TileLayer
@@ -32,7 +40,13 @@ export default function MapSection({ locationData = [] }) {
 					<Marker
 						key={`marker-${location.id}`}
 						position={[location.latitude, location.longitude]}
-					></Marker>
+						icon={myIcon}
+					>
+						<Popup>
+							[{location.latitude?.toFixed(6)}, {location.longitude?.toFixed(6)}
+							]
+						</Popup>
+					</Marker>
 				))}
 			</MapContainer>
 		</>
