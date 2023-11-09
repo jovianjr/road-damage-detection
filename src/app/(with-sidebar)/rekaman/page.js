@@ -67,33 +67,48 @@ export default function DaftarRekaman() {
 
 			{roadListIsLoading || roadListIsFetching ? (
 				<>
-					<table className="w-3/4 max-md:hidden">
-						<thead>
-							<tr>
-								{headerTableContent.map((item) => {
-									return (
-										<td key={item.id}>
-											<div className="m-2 h-[48px] animate-pulse rounded-lg bg-slate-300 p-2"></div>
-										</td>
-									)
-								})}
-							</tr>
-						</thead>
-
-						<tbody>
-							{Array(10)
-								.fill()
-								.map((_, id) => (
-									<tr key={id}>
+					<div className="container mx-auto">
+						<div className="flex justify-center max-md:hidden">
+							<table className="w-full bg-white text-lg font-medium max-md:text-sm">
+								<thead>
+									<tr>
 										{headerTableContent.map((item) => (
-											<td key={item.id}>
-												<div className="m-2 h-[48px] animate-pulse rounded-lg bg-slate-300 p-2"></div>
+											<td
+												className={clsx(
+													'border-b py-2 text-center max-md:px-2 md:py-4',
+													item !==
+														headerTableContent[headerTableContent.length - 1]
+														? 'border-r'
+														: ''
+												)}
+												key={item.id}
+											>
+												<div className="flex items-center justify-center gap-4">
+													{item.icon}
+													<p>{item.name}</p>
+												</div>
 											</td>
 										))}
 									</tr>
-								))}
-						</tbody>
-					</table>
+								</thead>
+
+								<tbody>
+									{Array(10)
+										.fill()
+										.map((_, id) => (
+											<tr key={id}>
+												{headerTableContent.map((item) => (
+													<td key={item.id}>
+														<div className="m-2 h-[48px] animate-pulse rounded-lg bg-slate-300 p-2"></div>
+													</td>
+												))}
+											</tr>
+										))}
+								</tbody>
+							</table>
+						</div>
+					</div>
+
 					<div className="mt-8 flex w-full flex-col gap-4 px-4 md:hidden">
 						{Array(10)
 							.fill()

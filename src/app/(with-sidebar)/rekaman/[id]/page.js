@@ -181,34 +181,70 @@ export default function Replay({ params }) {
 							</div>
 						</div>
 					</div>
-					<div className="container mx-auto py-16">
-						<table className="mx-auto w-full">
-							<thead>
-								<tr>
-									{headerTableContent.map((item) => {
-										return (
-											<td key={item.id}>
-												<div className="m-2 h-[48px] animate-pulse rounded-lg bg-slate-300 p-2"></div>
+					<div className="container mx-auto">
+						<div className="flex justify-center">
+							<table className="w-full bg-white text-lg font-medium max-md:text-sm">
+								<thead>
+									<tr>
+										{headerTableContent.map((item) => (
+											<td
+												className={clsx(
+													'border-b py-2 text-center max-md:px-2 md:py-4',
+													item !==
+														headerTableContent[headerTableContent.length - 1]
+														? 'border-r'
+														: ''
+												)}
+												key={item.id}
+											>
+												{item.name !== 'Jenis Kerusakan' ? (
+													<div className="flex items-center justify-center gap-4">
+														{item.icon}
+														<p>{item.name}</p>
+													</div>
+												) : (
+													<div className="flex items-center justify-center gap-4">
+														{item.icon}
+														<select
+															value={holeType}
+															onChange={(event) => {
+																setHoleType(event.target.value)
+															}}
+														>
+															<option value="all">{item.name} (Semua)</option>
+															<option value="pothole">Pothole</option>
+															<option value="alligator cracking">
+																Alligator Cracking
+															</option>
+															<option value="longitudinal cracking">
+																Longitudinal Cracking
+															</option>
+															<option value="lateral cracking">
+																Lateral Cracking
+															</option>
+														</select>
+													</div>
+												)}
 											</td>
-										)
-									})}
-								</tr>
-							</thead>
+										))}
+									</tr>
+								</thead>
 
-							<tbody>
-								{Array(10)
-									.fill()
-									.map((_, id) => (
-										<tr key={id}>
-											{headerTableContent.map((item) => (
-												<td key={item.id}>
-													<div className="m-2 h-[48px] animate-pulse rounded-lg bg-slate-300 p-2"></div>
-												</td>
-											))}
-										</tr>
-									))}
-							</tbody>
-						</table>
+								<tbody>
+									{Array(10)
+										.fill()
+										.map((_, id) => (
+											<tr key={id}>
+												{headerTableContent.map((item) => (
+													<td key={item.id}>
+														<div className="m-2 h-[48px] animate-pulse rounded-lg bg-slate-300 p-2"></div>
+													</td>
+												))}
+											</tr>
+										))}
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</>
 			) : (
@@ -266,141 +302,143 @@ export default function Replay({ params }) {
 					</div>
 
 					<div className="container mx-auto py-8 md:py-16">
-						<table
-							className="w-full bg-white text-lg font-medium"
+						<div
+							className="w-full overflow-x-auto max-md:px-4"
 							id="table-kerusakan"
 						>
-							<thead className="">
-								<tr>
-									{headerTableContent.map((item) =>
-										item.name !== 'Jenis Kerusakan' ? (
-											<td
-												className={clsx(
-													'border-b py-2 text-center md:py-4',
-													item !==
-														headerTableContent[headerTableContent.length - 1]
-														? 'border-r'
-														: ''
-												)}
-												key={item.id}
-											>
-												<div className="flex items-center justify-center gap-4">
-													{item.icon}
-													<p>{item.name}</p>
-												</div>
-											</td>
-										) : (
-											<td
-												className="border-b border-r py-2 text-center md:py-4"
-												key={item.id}
-											>
-												<div className="flex items-center justify-center gap-4">
-													{item.icon}
-													<select
-														value={holeType}
-														onChange={(event) => {
-															setHoleType(event.target.value)
-														}}
-													>
-														<option value="all">{item.name} (Semua)</option>
-														<option value="pothole">Pothole</option>
-														<option value="alligator cracking">
-															Alligator Cracking
-														</option>
-														<option value="longitudinal cracking">
-															Longitudinal Cracking
-														</option>
-														<option value="lateral cracking">
-															Lateral Cracking
-														</option>
-													</select>
-												</div>
-											</td>
-										)
-									)}
-								</tr>
-							</thead>
-
-							<tbody>
-								{filteredData?.length !== 0 ? (
-									filteredData?.map((item) => {
-										const jenisKerusakan = []
-
-										item.predictions.forEach((predict) => {
-											const foundKerusakan = jenisKerusakan.find(
-												(o) => o.name === predict.class
-											)
-
-											if (foundKerusakan) {
-												foundKerusakan.count += 1
-											} else {
-												jenisKerusakan.push({
-													id: predict.classId,
-													name: predict.class,
-													count: 1,
-												})
-											}
-										})
-
-										return (
-											<tr key={item._id}>
-												<td className="border-r py-2 text-center md:py-4">
-													{formatVideoTime(item.time)}
-												</td>
-												<td className="border-r py-2 text-center md:py-4">
-													{item.location?.latitude.toFixed(4)}
-												</td>
-												<td className="border-r py-2 text-center md:py-4">
-													{item.location?.longitude.toFixed(4)}
-												</td>
-												<td className="border-r py-2 text-center md:py-4">
-													{item.predictions.length}
-												</td>
-												<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
-													{jenisKerusakan.map((data) => {
-														return (
-															<div
-																className={clsx(
-																	'rounded-lg px-2.5 py-1 text-lg',
-																	data.name === 'pothole'
-																		? 'bg-pink-300'
-																		: data.name === 'longitudinal cracking'
-																		? 'bg-green-300'
-																		: data.name === 'lateral cracking'
-																		? 'bg-blue-300'
-																		: 'bg-yellow-300'
-																)}
-																key={data.id}
-															>
-																{data.name}
-																{data.count !== 1 ? ` (${data.count})` : ''}
-															</div>
-														)
-													})}
-												</td>
-												<td className="px-3 py-2 text-center md:py-4">
-													<div className="grid w-full grid-cols-1">
-														<IconComponent
-															onClick={() => {
-																handleSeeFrameClick(item)
-															}}
-															icon={<Eye />}
-															name="Lihat Frame"
-														/>
+							<table className="w-full bg-white text-lg font-medium max-md:text-sm">
+								<thead>
+									<tr>
+										{headerTableContent.map((item) =>
+											item.name !== 'Jenis Kerusakan' ? (
+												<td
+													className={clsx(
+														'border-b py-2 text-center max-md:px-2 md:py-4',
+														item !==
+															headerTableContent[headerTableContent.length - 1]
+															? 'border-r'
+															: ''
+													)}
+													key={item.id}
+												>
+													<div className="flex items-center justify-center gap-4">
+														{item.icon}
+														<p>{item.name}</p>
 													</div>
 												</td>
-											</tr>
-										)
-									})
-								) : (
-									<tr>
-										<td className="py-2 text-center text-xl italic md:py-4">
-											Tidak ada data ditemukan
-										</td>
+											) : (
+												<td
+													className="border-b border-r py-2 text-center md:py-4"
+													key={item.id}
+												>
+													<div className="flex items-center justify-center gap-4">
+														{item.icon}
+														<select
+															value={holeType}
+															onChange={(event) => {
+																setHoleType(event.target.value)
+															}}
+														>
+															<option value="all">{item.name} (Semua)</option>
+															<option value="pothole">Pothole</option>
+															<option value="alligator cracking">
+																Alligator Cracking
+															</option>
+															<option value="longitudinal cracking">
+																Longitudinal Cracking
+															</option>
+															<option value="lateral cracking">
+																Lateral Cracking
+															</option>
+														</select>
+													</div>
+												</td>
+											)
+										)}
 									</tr>
-								)}
-							</tbody>
-						</table>
+								</thead>
+
+								<tbody>
+									{filteredData?.length !== 0 ? (
+										filteredData?.map((item) => {
+											const jenisKerusakan = []
+
+											item.predictions.forEach((predict) => {
+												const foundKerusakan = jenisKerusakan.find(
+													(o) => o.name === predict.class
+												)
+
+												if (foundKerusakan) {
+													foundKerusakan.count += 1
+												} else {
+													jenisKerusakan.push({
+														id: predict.classId,
+														name: predict.class,
+														count: 1,
+													})
+												}
+											})
+
+											return (
+												<tr key={item._id}>
+													<td className="border-r py-2 text-center md:py-4">
+														{formatVideoTime(item.time)}
+													</td>
+													<td className="border-r py-2 text-center md:py-4">
+														{item.location?.latitude.toFixed(4)}
+													</td>
+													<td className="border-r py-2 text-center md:py-4">
+														{item.location?.longitude.toFixed(4)}
+													</td>
+													<td className="border-r py-2 text-center md:py-4">
+														{item.predictions.length}
+													</td>
+													<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
+														{jenisKerusakan.map((data) => {
+															return (
+																<div
+																	className={clsx(
+																		'rounded-lg px-2.5 py-1 text-lg max-md:text-sm',
+																		data.name === 'pothole'
+																			? 'bg-pink-300'
+																			: data.name === 'longitudinal cracking'
+																			? 'bg-green-300'
+																			: data.name === 'lateral cracking'
+																			? 'bg-blue-300'
+																			: 'bg-yellow-300'
+																	)}
+																	key={data.id}
+																>
+																	{data.name}
+																	{data.count !== 1 ? ` (${data.count})` : ''}
+																</div>
+															)
+														})}
+													</td>
+													<td className="px-3 py-2 text-center md:py-4">
+														<div className="grid w-full grid-cols-1">
+															<IconComponent
+																onClick={() => {
+																	handleSeeFrameClick(item)
+																}}
+																icon={<Eye size={18} />}
+																name="Lihat Frame"
+															/>
+														</div>
+													</td>
+												</tr>
+											)
+										})
+									) : (
+										<tr>
+											<td className="py-2 text-center text-xl italic md:py-4">
+												Tidak ada data ditemukan
+											</td>
+										</tr>
+									)}
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</>
 			)}
