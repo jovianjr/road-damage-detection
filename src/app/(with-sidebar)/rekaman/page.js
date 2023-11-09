@@ -9,11 +9,12 @@ import {
 	PlaySquare,
 	List,
 	Fullscreen,
+	FileDown,
 } from 'lucide-react'
 
 import IconComponent from '@/app/components/IconComponents'
 import { useQuery } from 'react-query'
-import { getAllRoad } from '@/utils/services/road'
+import { getAllRoad, getSingleRoadCsv } from '@/utils/services/road'
 
 const headerTableContent = [
 	{ id: 1, icon: <Calendar />, name: 'Tanggal' },
@@ -58,6 +59,20 @@ export default function DaftarRekaman() {
 		queryKey: ['all-road'],
 		queryFn: () => getAllRoad({}),
 	})
+
+	const handleDownloadCsv = async (roadId, roadName) => {
+		const response = await getSingleRoadCsv({ id: roadId })
+		if (response) {
+			const dataCsv = `data:text/csv;charset=utf-8,${response}`
+			const encodedURI = encodeURI(dataCsv)
+			const csvEl = document.createElement('a')
+			document.body.appendChild(csvEl)
+			csvEl.style = 'display: none'
+			csvEl.href = encodedURI
+			csvEl.download = `RDD-${roadName}.csv`
+			csvEl.click()
+		}
+	}
 
 	return (
 		<div className="justify-starts mt-4 flex min-h-screen w-full flex-col items-center bg-[#fff] text-black md:mt-16">
@@ -173,13 +188,24 @@ export default function DaftarRekaman() {
 											})}
 										</td>
 										<td className="px-3 py-2 text-center md:py-4">
-											<div className="grid w-full grid-cols-1">
-												<Link href={`/rekaman/${item._id}`}>
+											<div className="grid w-full grid-cols-2">
+												<Link
+													href={`/rekaman/${item._id}`}
+													className="cursor-pointer"
+												>
 													<IconComponent
 														icon={<Fullscreen />}
 														name="Lihat Replay"
 													/>
 												</Link>
+												<div
+													className="cursor-pointer"
+													onClick={() =>
+														handleDownloadCsv(item._id, item.title)
+													}
+												>
+													<IconComponent icon={<FileDown />} name="Unduh CSV" />
+												</div>
 											</div>
 										</td>
 									</tr>

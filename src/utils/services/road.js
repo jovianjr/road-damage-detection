@@ -52,3 +52,9 @@ export const updateRoadLocationByCSV = async ({
 	})
 	return response.data
 }
+
+export const getSingleRoadCsv = async ({ id = null }) => {
+	const response = await axios.get(`/api/roads/${id}/csv`)
+
+	return response.data
+}
