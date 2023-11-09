@@ -6,8 +6,8 @@ import Record from '@/app/rekam-video/_record'
 import Action from '@/app/rekam-video/_action'
 
 const videoConstraints = {
-	width: 1080,
-	height: 640,
+	width: 1920,
+	height: 1080,
 	frameRate: { ideal: 30, max: 30 },
 	facingMode: 'environment',
 }
