@@ -83,14 +83,16 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 			)}
 		>
 			<div className="container mx-auto flex h-full w-1/2 items-center justify-center">
-				<div className="relative flex w-[500px] flex-col rounded-xl bg-white p-8 text-black">
+				<div className="relative flex w-[500px] flex-col rounded-xl bg-white p-8 text-black max-md:text-sm">
 					<button
 						onClick={onClose}
 						className="absolute -right-2 -top-2 z-20 aspect-square w-8 rounded bg-red-500 text-white transition-all duration-300 hover:scale-110"
 					>
 						<X className="mx-auto w-8" />
 					</button>
-					<h1 className="mb-4 text-2xl font-semibold">Edit Rekaman</h1>
+					<h1 className="mb-4 text-2xl font-semibold max-md:text-lg">
+						Edit Rekaman
+					</h1>
 
 					<label htmlFor="name">Judul Video</label>
 					<input
@@ -104,7 +106,7 @@ const EditPopup = ({ formEdit, onClose, handleChangeTitle }) => {
 					<UploadFile
 						title="Update file lokasi baru"
 						name="location"
-						className="!h-[250px]"
+						className="!h-[250px] max-md:!h-[270px]"
 						onChange={setFileCSV}
 						disabled={updateData.isLoading}
 						type="csv"
