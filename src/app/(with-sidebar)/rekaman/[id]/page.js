@@ -15,6 +15,7 @@ import {
 	Trash,
 	Clock,
 	Eye,
+	FileDown,
 } from 'lucide-react'
 
 import FramePopup from '@/app/(with-sidebar)/rekaman/[id]/_framePopup'
@@ -167,6 +168,20 @@ export default function Replay({ params }) {
 		setFilteredData(filteredDetections)
 	}, [roadDataIsLoading, holeType])
 
+	const handleDownloadCsv = async (roadId, roadName) => {
+		const response = await getSingleRoadCsv({ id: roadId })
+		if (response) {
+			const dataCsv = `data:text/csv;charset=utf-8,${response}`
+			const encodedURI = encodeURI(dataCsv)
+			const csvEl = document.createElement('a')
+			document.body.appendChild(csvEl)
+			csvEl.style = 'display: none'
+			csvEl.href = encodedURI
+			csvEl.download = `RDD-${roadName}.csv`
+			csvEl.click()
+		}
+	}
+
 	const icons = [
 		{
 			id: 1,
@@ -182,6 +197,12 @@ export default function Replay({ params }) {
 		},
 		{ id: 3, icon: <Pencil />, name: 'Edit', action: handleClickEdit },
 		{ id: 4, icon: <Trash />, name: 'Hapus', action: handleClickDelete },
+		{
+			id: 5,
+			icon: <FileDown />,
+			name: 'Unduh CSV',
+			action: () => handleDownloadCsv(roadData.data._id, roadData.data.title),
+		},
 	]
 
 	return (
