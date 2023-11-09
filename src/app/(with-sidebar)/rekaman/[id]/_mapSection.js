@@ -1,5 +1,6 @@
 'use client'
 import 'leaflet/dist/leaflet.css'
+import { useEffect, useState } from 'react'
 import {
 	MapContainer,
 	Marker,
@@ -8,19 +9,18 @@ import {
 	ZoomControl,
 } from 'react-leaflet'
 
-export default function MapSection({ locationData = [] }) {
-	const initialPosition = [
-		locationData[0]?.latitude || -2.600029,
-		locationData[0]?.longitude || 118.015776,
-	]
-
+export default function MapSection({
+	locationData = [],
+	initialLat = -2.600029,
+	initialLong = 118.015776,
+}) {
 	return (
 		<>
 			<h1 className="mb-8 text-xl font-semibold">Peta Kerusakan</h1>
 			<MapContainer
 				className="relative z-10 h-[590px] w-full rounded-xl"
-				center={initialPosition}
-				zoom={5}
+				center={[initialLat, initialLong]}
+				zoom={18}
 				zoomControl={false}
 			>
 				<TileLayer

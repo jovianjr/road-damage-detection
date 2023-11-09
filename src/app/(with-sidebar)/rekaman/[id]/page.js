@@ -327,7 +327,11 @@ export default function Replay({ params }) {
 						className="container mx-auto rounded-xl py-8 md:py-16"
 						id="peta-kerusakan"
 					>
-						<MapSection locationData={mapData} />
+						<MapSection
+							locationData={mapData}
+							initialLat={roadData.data.detections[0].location.latitude}
+							initialLong={roadData.data.detections[0].location.longitude}
+						/>
 					</div>
 
 					<div className="container mx-auto py-8 md:py-16">
