@@ -1,6 +1,9 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useQuery } from 'react-query'
+import clsx from 'clsx'
+
 import {
 	AlignLeft,
 	AlertOctagon,
@@ -17,11 +20,10 @@ import {
 import FramePopup from '@/app/(with-sidebar)/rekaman/[id]/_framePopup'
 import EditPopup from '@/app/(with-sidebar)/rekaman/[id]/_editPopup'
 import DeletePopup from '@/app/(with-sidebar)/rekaman/[id]/_deletePopup'
+import MapSection from '@/app/(with-sidebar)/rekaman/[id]//_mapSection'
 import IconComponent from '@/app/components/IconComponents'
-import { useQuery } from 'react-query'
 import { getRoadById } from '@/utils/services/road'
 
-import clsx from 'clsx'
 import formatVideoTime from '@/utils/helpers/formatVideoTime'
 
 const headerTableContent = [
@@ -47,6 +49,7 @@ export default function Replay({ params }) {
 	const [isDeleting, setIsDeleting] = useState(false)
 	const [holeType, setHoleType] = useState('all')
 	const [filteredData, setFilteredData] = useState()
+	const [mapData, setMapData] = useState()
 
 	const roadId = params.id
 
@@ -78,6 +81,20 @@ export default function Replay({ params }) {
 		}
 	}
 
+	useEffect(() => {
+		const dataPeta = []
+		roadData?.data.detections?.forEach((detection) => {
+			if (!detection.location) return
+
+			dataPeta.push({
+				id: detection._id,
+				latitude: detection.location.latitude,
+				longitude: detection.location.longitude,
+			})
+		})
+		setMapData(dataPeta)
+	}, [roadData])
+
 	const handleClickEdit = () => {
 		setFormEdit((prev) => ({
 			...prev,
@@ -91,8 +108,8 @@ export default function Replay({ params }) {
 		setIsDeleting(true)
 	}
 
-	const handleClickTable = () => {
-		document.getElementById('table-kerusakan').scrollIntoView({
+	const handleClickSection = (section) => {
+		document.getElementById(section).scrollIntoView({
 			behavior: 'smooth',
 			block: 'start',
 		})
@@ -154,9 +171,14 @@ export default function Replay({ params }) {
 			id: 1,
 			icon: <TableProperties />,
 			name: 'Lihat Tabel',
-			action: handleClickTable,
+			action: () => handleClickSection('table-kerusakan'),
 		},
-		{ id: 2, icon: <Map />, name: 'Lihat Peta', action: null },
+		{
+			id: 2,
+			icon: <Map />,
+			name: 'Lihat Peta',
+			action: () => handleClickSection('peta-kerusakan'),
+		},
 		{ id: 3, icon: <Pencil />, name: 'Edit', action: handleClickEdit },
 		{ id: 4, icon: <Trash />, name: 'Hapus', action: handleClickDelete },
 	]
@@ -299,6 +321,13 @@ export default function Replay({ params }) {
 								})}
 							</div>
 						</div>
+					</div>
+
+					<div
+						className="container mx-auto rounded-xl py-8 md:py-16"
+						id="peta-kerusakan"
+					>
+						<MapSection locationData={mapData} />
 					</div>
 
 					<div className="container mx-auto py-8 md:py-16">

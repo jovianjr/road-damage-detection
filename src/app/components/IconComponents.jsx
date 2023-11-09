@@ -14,7 +14,7 @@ export default function IconComponent({ icon, name, onClick = null }) {
 	return (
 		isMounted && (
 			<>
-				<div className="flex items-center justify-center max-md:p-2">
+				<div className="flex items-center justify-center max-md:hidden max-md:p-2">
 					<div
 						data-tooltip-content={name}
 						data-tooltip-id="icon-tooltip"
@@ -25,7 +25,7 @@ export default function IconComponent({ icon, name, onClick = null }) {
 					</div>
 				</div>
 
-				{/* <Tooltip
+				<Tooltip
 					id="icon-tooltip"
 					place="bottom"
 					style={{
@@ -37,7 +37,7 @@ export default function IconComponent({ icon, name, onClick = null }) {
 					}}
 					noArrow
 					className="max-md:hidden"
-				/> */}
+				/>
 			</>
 		)
 	)
