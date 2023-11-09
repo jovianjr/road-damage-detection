@@ -25,7 +25,7 @@ export default function IconComponent({ icon, name, onClick = null }) {
 					</div>
 				</div>
 
-				<Tooltip
+				{/* <Tooltip
 					id="icon-tooltip"
 					place="bottom"
 					style={{
@@ -37,7 +37,7 @@ export default function IconComponent({ icon, name, onClick = null }) {
 					}}
 					noArrow
 					className="max-md:hidden"
-				/>
+				/> */}
 			</>
 		)
 	)

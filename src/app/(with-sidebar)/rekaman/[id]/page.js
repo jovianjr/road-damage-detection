@@ -182,7 +182,7 @@ export default function Replay({ params }) {
 						</div>
 					</div>
 					<div className="container mx-auto">
-						<div className="flex justify-center">
+						<div className="w-full overflow-x-auto max-md:px-4">
 							<table className="w-full bg-white text-lg font-medium max-md:text-sm">
 								<thead>
 									<tr>
