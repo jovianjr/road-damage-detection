@@ -58,7 +58,10 @@ export default function DaftarRekaman() {
 	} = useQuery({
 		refetchOnWindowFocus: false,
 		queryKey: ['all-road'],
-		queryFn: () => getAllRoad({}),
+		queryFn: () =>
+			getAllRoad({
+				locations: 1,
+			}),
 	})
 
 	const handleDownloadCsv = async (roadId, roadName) => {
@@ -178,16 +181,20 @@ export default function DaftarRekaman() {
 												{item.detectionMeta.totalDamage}
 											</td>
 											<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
-												{item.videoData?.map((data, index) => {
-													return (
-														<div
-															className="rounded-lg bg-pink-300 px-2.5 py-1 text-xl"
-															key={index}
-														>
-															{data.text}
-														</div>
-													)
-												})}
+												<div
+													className="rounded-lg bg-pink-300 px-2.5 py-1 text-xl"
+													key={index}
+												>
+													Video
+												</div>
+												{item.locations?.length > 0 ? (
+													<div
+														className="rounded-lg bg-yellow-300 px-2.5 py-1 text-xl"
+														key={index}
+													>
+														Lokasi
+													</div>
+												) : null}
 											</td>
 											<td className="px-3 py-2 text-center md:py-4">
 												<div className="grid w-full grid-cols-2">
