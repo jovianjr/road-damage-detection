@@ -17,6 +17,7 @@ import {
 	Eye,
 	FileDown,
 } from 'lucide-react'
+import { Tooltip } from 'react-tooltip'
 
 import FramePopup from '@/app/(with-sidebar)/rekaman/[id]/_framePopup'
 import EditPopup from '@/app/(with-sidebar)/rekaman/[id]/_editPopup'
@@ -462,6 +463,7 @@ export default function Replay({ params }) {
 													<td className="px-3 py-2 text-center md:py-4">
 														<div className="grid w-full grid-cols-1">
 															<IconComponent
+																id="icon-tooltip-table"
 																onClick={() => {
 																	handleSeeFrameClick(item)
 																}}
@@ -495,6 +497,32 @@ export default function Replay({ params }) {
 					) : null}
 				</>
 			)}
+			<Tooltip
+				id="icon-tooltip"
+				place="bottom"
+				style={{
+					backgroundColor: '#E0E0E0',
+					color: '#222222',
+					borderRadius: '8px',
+					fontSize: '16px',
+					padding: '4px 12px',
+				}}
+				noArrow
+				className="max-md:hidden"
+			/>
+			<Tooltip
+				id="icon-tooltip-table"
+				place="bottom"
+				style={{
+					backgroundColor: '#E0E0E0',
+					color: '#222222',
+					borderRadius: '8px',
+					fontSize: '16px',
+					padding: '4px 12px',
+				}}
+				noArrow
+				className="max-md:hidden"
+			/>
 		</div>
 	)
 }
