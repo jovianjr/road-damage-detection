@@ -23,7 +23,7 @@ import EditPopup from '@/app/(with-sidebar)/rekaman/[id]/_editPopup'
 import DeletePopup from '@/app/(with-sidebar)/rekaman/[id]/_deletePopup'
 import MapSection from '@/app/(with-sidebar)/rekaman/[id]//_mapSection'
 import IconComponent from '@/app/components/IconComponents'
-import { getRoadById } from '@/utils/services/road'
+import { getRoadById, getSingleRoadCsv } from '@/utils/services/road'
 
 import formatVideoTime from '@/utils/helpers/formatVideoTime'
 
@@ -213,7 +213,7 @@ export default function Replay({ params }) {
 						<div className="h-[500px] w-full animate-pulse rounded-lg bg-slate-300 md:rounded-2xl"></div>
 						<div className="mt-12 flex w-full items-center gap-5">
 							<div className="h-[24px] w-full animate-pulse rounded-lg bg-slate-300 px-6 py-3 text-2xl"></div>
-							<div className="grid w-1/2 grid-cols-4">
+							<div className="grid w-1/2 grid-cols-5">
 								{icons.map((item) => {
 									return (
 										<div
@@ -330,7 +330,7 @@ export default function Replay({ params }) {
 							<div className="w-full px-2 py-3 text-lg md:px-6 md:text-2xl">
 								{roadData?.data.title}
 							</div>
-							<div className="grid w-2/3 grid-cols-4 max-md:gap-4 max-md:pr-2">
+							<div className="grid w-2/3 grid-cols-5 max-md:gap-4 max-md:pr-2">
 								{icons.map((item) => {
 									return (
 										<IconComponent
