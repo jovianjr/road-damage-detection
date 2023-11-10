@@ -11,6 +11,7 @@ import {
 	Fullscreen,
 	FileDown,
 	Download,
+	PlusSquareIcon,
 } from 'lucide-react'
 import { useQuery } from 'react-query'
 import { Tooltip } from 'react-tooltip'
@@ -105,19 +106,22 @@ export default function DaftarRekaman() {
 						Daftar Rekaman
 					</h1>
 
-					<IconComponent
-						icon={
-							<button
-								className="flex gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm shadow-md lg:text-base"
-								onClick={handleDownloadAllCsv}
-							>
-								Unduh Semua
-								<Download />
+					<div className="flex gap-4">
+						<Link href="/tambah-video">
+							<button className="flex gap-2 rounded-lg bg-c-yellow px-4 py-2 text-sm shadow-md transition-all hover:bg-c-yellow/70 lg:text-base">
+								Tambah Video
+								<PlusSquareIcon />
 							</button>
-						}
-						name="Unduh CSV Keseluruhan"
-						className="flex gap-2"
-					/>
+						</Link>
+
+						<button
+							className="flex gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm shadow-md transition-all hover:bg-slate-200 lg:text-base"
+							onClick={handleDownloadAllCsv}
+						>
+							Unduh Semua
+							<Download />
+						</button>
+					</div>
 				</div>
 
 				{roadListIsLoading || roadListIsFetching ? (
@@ -269,7 +273,7 @@ export default function DaftarRekaman() {
 									<tr>
 										<td
 											colSpan={5}
-											className="py-4 text-center text-sm italic md:py-4 md:text-base"
+											className="py-4 text-center text-sm font-normal italic md:py-8 md:text-base	"
 										>
 											Tidak ada data ditemukan
 										</td>

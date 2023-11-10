@@ -500,7 +500,7 @@ export default function Replay({ params }) {
 										<tr>
 											<td
 												colSpan={7}
-												className="py-4 text-center text-xl italic md:py-4"
+												className="py-4 text-center text-xl font-normal italic md:py-4"
 											>
 												Tidak ada data ditemukan
 											</td>
