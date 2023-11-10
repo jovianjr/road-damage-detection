@@ -267,16 +267,29 @@ export default function DaftarRekaman() {
 									>
 										<p>{convertTime(item.createdAt)}</p>
 										<p className="w-full text-lg font-semibold">{item.title}</p>
-										<p>
-											<span>Jumlah kerusakan: </span>
-											{item.detectionMeta.totalDamage}
-										</p>
-										<Link href={`/rekaman/${item._id}`} className="self-end">
-											<IconComponent
-												icon={<Fullscreen />}
-												name="Lihat Replay"
-											/>
-										</Link>
+										{item.detectionMeta.totalDamage > 0 && (
+											<p>
+												<span>Jumlah kerusakan: </span>
+												{item.detectionMeta.totalDamage}
+											</p>
+										)}
+										<div className="mt-2 flex w-full justify-end gap-4">
+											<Link
+												href={`/rekaman/${item._id}`}
+												className="cursor-pointer"
+											>
+												<IconComponent
+													icon={<Fullscreen />}
+													name="Lihat Replay"
+												/>
+											</Link>
+											<div
+												className="cursor-pointer"
+												onClick={() => handleDownloadCsv(item._id, item.title)}
+											>
+												<IconComponent icon={<FileDown />} name="Unduh CSV" />
+											</div>
+										</div>
 									</div>
 								))
 							) : (

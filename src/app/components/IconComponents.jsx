@@ -10,7 +10,7 @@ export default function IconComponent({
 	onClick = null,
 }) {
 	return (
-		<div className="flex items-center justify-center max-md:hidden max-md:p-2">
+		<div className="flex items-center justify-center max-md:p-2">
 			<div
 				data-tooltip-content={name}
 				data-tooltip-id={id}
