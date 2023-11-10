@@ -134,7 +134,7 @@ export default function Home() {
 									id: detection._id,
 									name: predict.class,
 									data: [],
-									status: 0,
+									status: 1,
 								})
 							} else {
 								let foundlocation = foundKerusakan.data.find(

@@ -50,7 +50,7 @@ const Record = ({
 
 	const getDuration = () => {
 		setDurationData((prev) => {
-			const durationTime = Date.now() - prev.start
+			const durationTime = Date.now() - (prev.start / 1000)
 
 			const formatTime = (time) => String(time).padStart(2, '0')
 			const seconds = formatTime(Math.floor(durationTime / 1000) % 60)
