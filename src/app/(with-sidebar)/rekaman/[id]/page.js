@@ -327,9 +327,14 @@ export default function Replay({ params }) {
 								crossOrigin="anonymous"
 							/>
 						</div>
-						<div className="mt-2 flex w-full items-center gap-5 md:mt-12">
-							<div className="w-full px-2 py-3 text-lg md:px-6 md:text-2xl">
+						<div className="mt-2 flex w-full items-start gap-5 md:mt-12">
+							<div className="w-full px-2 text-lg md:px-6 md:text-xl">
 								{roadData?.data.title}
+								{roadData?.data.detectionMeta.status === 'processing' ? (
+									<p className="pt-2 text-sm text-red-500">
+										Sedang proses deteksi
+									</p>
+								) : null}
 							</div>
 							<div className="grid w-2/3 grid-cols-5 max-md:gap-4 max-md:pr-2">
 								{icons.map((item) => {
@@ -477,7 +482,10 @@ export default function Replay({ params }) {
 										})
 									) : (
 										<tr>
-											<td className="py-2 text-center text-xl italic md:py-4">
+											<td
+												colSpan={7}
+												className="py-4 text-center text-xl italic md:py-4"
+											>
 												Tidak ada data ditemukan
 											</td>
 										</tr>

@@ -100,14 +100,23 @@ export default function DaftarRekaman() {
 	return (
 		<>
 			<div className="mt-4 flex min-h-screen w-full flex-col items-center justify-start bg-[#fff] text-black md:mt-16">
-				<div className="mb-2 flex w-full justify-start gap-4 max-md:px-4 md:mb-8 md:w-3/4 ">
+				<div className="mb-2 flex w-full items-center justify-between gap-4 max-md:px-4 md:mb-8 md:w-3/4 ">
 					<h1 className="text-left text-xl font-semibold md:text-2xl">
 						Daftar Rekaman
 					</h1>
+
 					<IconComponent
-						icon={<Download />}
+						icon={
+							<button
+								className="flex gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm shadow-md lg:text-base"
+								onClick={handleDownloadAllCsv}
+							>
+								Unduh Semua
+								<Download />
+							</button>
+						}
 						name="Unduh CSV Keseluruhan"
-						onClick={handleDownloadAllCsv}
+						className="flex gap-2"
 					/>
 				</div>
 
@@ -204,7 +213,13 @@ export default function DaftarRekaman() {
 												{item.title}
 											</td>
 											<td className="border-r py-2 text-center md:py-4">
-												{item.detectionMeta.totalDamage}
+												{item.detectionMeta.status === 'processing' ? (
+													<p className="text-base text-black/20">
+														sedang proses
+													</p>
+												) : (
+													item.detectionMeta.totalDamage ?? 0
+												)}
 											</td>
 											<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
 												<div
@@ -269,14 +284,29 @@ export default function DaftarRekaman() {
 										<p className="w-full text-lg font-semibold">{item.title}</p>
 										<p>
 											<span>Jumlah kerusakan: </span>
-											{item.detectionMeta.totalDamage}
+											{item.detectionMeta.status === 'processing'
+												? 'sedang proses'
+												: item.detectionMeta.totalDamage ?? 0}
 										</p>
-										<Link href={`/rekaman/${item._id}`} className="self-end">
-											<IconComponent
-												icon={<Fullscreen />}
-												name="Lihat Replay"
-											/>
-										</Link>
+										<div className="flex gap-4 self-end">
+											<Link
+												href={`/rekaman/${item._id}`}
+												className="flex cursor-pointer items-center self-end rounded-lg bg-c-yellow px-3 py-1 text-xs shadow-md transition-all hover:bg-c-yellow/70"
+											>
+												Lihat Detail
+												<IconComponent
+													icon={<Fullscreen />}
+													name="Lihat Detail"
+												/>
+											</Link>
+											<div
+												className="flex cursor-pointer items-center self-end rounded-lg bg-slate-100 px-3 py-1 text-xs shadow-md transition-all hover:bg-slate-200"
+												onClick={() => handleDownloadCsv(item._id, item.title)}
+											>
+												Unduh CSV
+												<IconComponent icon={<FileDown />} name="Unduh CSV" />
+											</div>
+										</div>
 									</div>
 								))
 							) : (
