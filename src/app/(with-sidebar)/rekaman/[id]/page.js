@@ -333,14 +333,29 @@ export default function Replay({ params }) {
 							</div>
 							<div className="grid w-2/3 grid-cols-5 max-md:gap-4 max-md:pr-2">
 								{icons.map((item) => {
-									return (
-										<IconComponent
-											icon={item.icon}
-											name={item.name}
-											onClick={item.action}
-											key={item.id}
-										/>
-									)
+									if (item.name === 'Unduh CSV') {
+										{
+											if (roadData.data.locations?.length > 0) {
+												return (
+													<IconComponent
+														icon={item.icon}
+														name={item.name}
+														onClick={item.action}
+														key={item.id}
+													/>
+												)
+											}
+										}
+									} else {
+										return (
+											<IconComponent
+												icon={item.icon}
+												name={item.name}
+												onClick={item.action}
+												key={item.id}
+											/>
+										)
+									}
 								})}
 							</div>
 						</div>
