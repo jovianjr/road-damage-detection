@@ -43,7 +43,7 @@ export default function MapSection({ locationData = [] }) {
 						icon={myIcon}
 					>
 						<Popup>
-							[{location.latitude?.toFixed(6)}, {location.longitude?.toFixed(6)}
+							[{location.latitude?.toFixed(8)}, {location.longitude?.toFixed(8)}
 							]
 						</Popup>
 					</Marker>
