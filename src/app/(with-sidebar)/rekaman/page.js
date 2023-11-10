@@ -10,12 +10,17 @@ import {
 	List,
 	Fullscreen,
 	FileDown,
+	Download,
 } from 'lucide-react'
 import { useQuery } from 'react-query'
 import { Tooltip } from 'react-tooltip'
 
 import IconComponent from '@/app/components/IconComponents'
-import { getAllRoad, getSingleRoadCsv } from '@/utils/services/road'
+import {
+	getAllRoad,
+	getAllRoadCsv,
+	getSingleRoadCsv,
+} from '@/utils/services/road'
 
 const headerTableContent = [
 	{ id: 1, icon: <Calendar />, name: 'Tanggal' },
@@ -78,12 +83,33 @@ export default function DaftarRekaman() {
 		}
 	}
 
+	const handleDownloadAllCsv = async () => {
+		const response = await getAllRoadCsv()
+		if (response) {
+			const dataCsv = `data:text/csv;charset=utf-8,${response}`
+			const encodedURI = encodeURI(dataCsv)
+			const csvEl = document.createElement('a')
+			document.body.appendChild(csvEl)
+			csvEl.style = 'display: none'
+			csvEl.href = encodedURI
+			csvEl.download = `RDD - Kerusakan Jalan.csv`
+			csvEl.click()
+		}
+	}
+
 	return (
 		<>
-			<div className="justify-starts mt-4 flex min-h-screen w-full flex-col items-center bg-[#fff] text-black md:mt-16">
-				<h1 className="mb-2 w-full text-left text-xl font-semibold max-md:px-4 md:mb-8 md:w-3/4 md:text-2xl">
-					Daftar Rekaman
-				</h1>
+			<div className="mt-4 flex min-h-screen w-full flex-col items-center justify-start bg-[#fff] text-black md:mt-16">
+				<div className="mb-2 flex w-full justify-start gap-4 max-md:px-4 md:mb-8 md:w-3/4 ">
+					<h1 className="text-left text-xl font-semibold md:text-2xl">
+						Daftar Rekaman
+					</h1>
+					<IconComponent
+						icon={<Download />}
+						name="Unduh CSV Keseluruhan"
+						onClick={handleDownloadAllCsv}
+					/>
+				</div>
 
 				{roadListIsLoading || roadListIsFetching ? (
 					<>
