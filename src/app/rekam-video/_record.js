@@ -33,7 +33,7 @@ const Record = ({
 			setLocationData([])
 			setCapturing(true)
 			setDurationData({
-				start: Date.now(),
+				start: Date.now() * 1000,
 				stop: null,
 				duration: '00:00:00',
 			})
@@ -73,7 +73,7 @@ const Record = ({
 					setLocationData((prev) => [
 						...prev,
 						{
-							microTime: Date.now(),
+							microTime: Date.now() * 1000,
 							latitude: position.coords.latitude,
 							longitude: position.coords.longitude,
 						},
