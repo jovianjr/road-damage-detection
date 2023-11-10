@@ -88,11 +88,11 @@ export default function Replay({ params }) {
 		const dataPeta = []
 		roadData?.data.detections?.forEach((detection) => {
 			if (!detection.location) return
-
 			dataPeta.push({
 				id: detection._id,
 				latitude: detection.location.latitude,
 				longitude: detection.location.longitude,
+				data: detection.predictions,
 			})
 		})
 
