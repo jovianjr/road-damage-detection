@@ -435,10 +435,10 @@ export default function Replay({ params }) {
 														{formatVideoTime(item.time)}
 													</td>
 													<td className="border-r py-2 text-center md:py-4">
-														{item.location?.latitude.toFixed(4)}
+														{item.location?.latitude.toFixed(8)}
 													</td>
 													<td className="border-r py-2 text-center md:py-4">
-														{item.location?.longitude.toFixed(4)}
+														{item.location?.longitude.toFixed(8)}
 													</td>
 													<td className="border-r py-2 text-center md:py-4">
 														{item.predictions.length}

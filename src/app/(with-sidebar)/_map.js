@@ -88,8 +88,8 @@ export default function Home({ locationData = [] }) {
 								icon={myMarker.icon}
 							>
 								<Popup>
-									{kerusakan.name} <br />[{data?.latitude?.toFixed(6)},{' '}
-									{data?.longitude?.toFixed(6)}]
+									{kerusakan.name} <br />[{data?.latitude?.toFixed(8)},{' '}
+									{data?.longitude?.toFixed(8)}]
 								</Popup>
 							</Marker>
 						)
