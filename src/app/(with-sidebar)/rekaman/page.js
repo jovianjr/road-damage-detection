@@ -248,17 +248,19 @@ export default function DaftarRekaman() {
 															name="Lihat Replay"
 														/>
 													</Link>
-													<div
-														className="cursor-pointer"
-														onClick={() =>
-															handleDownloadCsv(item._id, item.title)
-														}
-													>
-														<IconComponent
-															icon={<FileDown />}
-															name="Unduh CSV"
-														/>
-													</div>
+													{item.locations?.length > 0 && (
+														<div
+															className="cursor-pointer"
+															onClick={() =>
+																handleDownloadCsv(item._id, item.title)
+															}
+														>
+															<IconComponent
+																icon={<FileDown />}
+																name="Unduh CSV"
+															/>
+														</div>
+													)}
 												</div>
 											</td>
 										</tr>
@@ -299,13 +301,17 @@ export default function DaftarRekaman() {
 													name="Lihat Detail"
 												/>
 											</Link>
-											<div
-												className="flex cursor-pointer items-center self-end rounded-lg bg-slate-100 px-3 py-1 text-xs shadow-md transition-all hover:bg-slate-200"
-												onClick={() => handleDownloadCsv(item._id, item.title)}
-											>
-												Unduh CSV
-												<IconComponent icon={<FileDown />} name="Unduh CSV" />
-											</div>
+											{item.locations?.length > 0 && (
+												<div
+													className="flex cursor-pointer items-center self-end rounded-lg bg-slate-100 px-3 py-1 text-xs shadow-md transition-all hover:bg-slate-200"
+													onClick={() =>
+														handleDownloadCsv(item._id, item.title)
+													}
+												>
+													Unduh CSV
+													<IconComponent icon={<FileDown />} name="Unduh CSV" />
+												</div>
+											)}
 										</div>
 									</div>
 								))
