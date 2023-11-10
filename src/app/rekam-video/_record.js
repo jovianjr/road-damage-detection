@@ -50,7 +50,7 @@ const Record = ({
 
 	const getDuration = () => {
 		setDurationData((prev) => {
-			const durationTime = Date.now() - (prev.start / 1000)
+			const durationTime = Date.now() - prev.start / 1000
 
 			const formatTime = (time) => String(time).padStart(2, '0')
 			const seconds = formatTime(Math.floor(durationTime / 1000) % 60)
@@ -131,7 +131,7 @@ const Record = ({
 					{durationData?.duration ?? '--:--:--'}
 				</p>
 			</div>
-			<div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+			<div className="absolute bottom-1 left-1/2 -translate-x-1/2 md:bottom-4">
 				{capturing ? (
 					<button
 						className="rounded-full bg-white px-4 py-2 transition-all hover:bg-slate-500 hover:text-white"
