@@ -208,14 +208,14 @@ export default function DaftarRekaman() {
 											</td>
 											<td className="flex gap-2 border-r px-4 py-2 text-center md:py-4">
 												<div
-													className="rounded-lg bg-pink-300 px-2.5 py-1 text-xl"
+													className="rounded-lg bg-pink-300 px-2.5 py-1"
 													key={index}
 												>
 													Video
 												</div>
 												{item.locations?.length > 0 ? (
 													<div
-														className="rounded-lg bg-yellow-300 px-2.5 py-1 text-xl"
+														className="rounded-lg bg-yellow-300 px-2.5 py-1"
 														key={index}
 													>
 														Lokasi
