@@ -203,7 +203,7 @@ export default function DaftarRekaman() {
 							</thead>
 
 							<tbody>
-								{roadList?.data !== 0 ? (
+								{roadList?.data.length !== 0 ? (
 									roadList?.data?.map((item, index) => (
 										<tr key={index}>
 											<td className="border-r py-2 text-center md:py-4">
@@ -267,7 +267,10 @@ export default function DaftarRekaman() {
 									))
 								) : (
 									<tr>
-										<td className="py-2 text-center text-2xl italic md:py-4">
+										<td
+											colSpan={5}
+											className="py-4 text-center text-sm italic md:py-4 md:text-base"
+										>
 											Tidak ada data ditemukan
 										</td>
 									</tr>

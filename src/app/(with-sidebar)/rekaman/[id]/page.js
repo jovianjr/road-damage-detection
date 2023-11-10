@@ -27,6 +27,7 @@ import IconComponent from '@/app/components/IconComponents'
 import { getRoadById, getSingleRoadCsv } from '@/utils/services/road'
 
 import formatVideoTime from '@/utils/helpers/formatVideoTime'
+import Link from 'next/link'
 
 const headerTableContent = [
 	{ id: 1, icon: <Clock />, name: 'Durasi Video' },
@@ -207,7 +208,7 @@ export default function Replay({ params }) {
 	]
 
 	return (
-		<div className="min-h-screen w-full bg-[#fff] pt-8 text-black md:pt-24">
+		<div className="flex min-h-screen w-full flex-col items-center justify-center bg-[#fff] pt-8 text-black md:pt-24">
 			{roadDataIsLoading || roadDataIsFetching ? (
 				<>
 					<div className="container mx-auto max-md:px-2 md:w-[831px]">
@@ -226,7 +227,7 @@ export default function Replay({ params }) {
 							</div>
 						</div>
 					</div>
-					<div className="container mx-auto">
+					<div className="container mx-auto pt-10">
 						<div className="w-full overflow-x-auto max-md:px-4">
 							<table className="w-full bg-white text-lg font-medium max-md:text-sm">
 								<thead>
@@ -292,7 +293,7 @@ export default function Replay({ params }) {
 						</div>
 					</div>
 				</>
-			) : (
+			) : roadData?.data ? (
 				<>
 					<EditPopup
 						formEdit={formEdit}
@@ -519,6 +520,15 @@ export default function Replay({ params }) {
 						</div>
 					) : null}
 				</>
+			) : (
+				<div className="flex h-full w-full flex-col items-center justify-center gap-4 text-base md:text-lg">
+					Tidak ada data ditemukan
+					<Link href="/rekaman">
+						<button className="rounded-lg bg-c-yellow px-4 py-2 transition-all hover:bg-c-yellow/70">
+							Kembali
+						</button>
+					</Link>
+				</div>
 			)}
 			<Tooltip
 				id="icon-tooltip"
